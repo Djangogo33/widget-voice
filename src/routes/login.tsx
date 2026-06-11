@@ -4,6 +4,7 @@ import { z } from "zod";
 import { Loader2, Mail } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import { useI18n } from "@/lib/i18n";
 import {
   AuthShell, LabeledInput, Divider, GoogleIcon, SuccessState,
 } from "./signup";
