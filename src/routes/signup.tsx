@@ -52,7 +52,7 @@ function SignupPage() {
       return;
     }
     setPromoState({ status: "checking" });
-    const t = setTimeout(async () => {
+    const handle = setTimeout(async () => {
       try {
         const res = await validate({ data: { code } });
         if (res.valid) {
@@ -61,11 +61,11 @@ function SignupPage() {
           setPromoState({ status: "invalid", message: res.reason });
         }
       } catch {
-        setPromoState({ status: "invalid", message: "Could not check code" });
+        setPromoState({ status: "invalid", message: t("auth.couldNotCheck") });
       }
     }, 400);
-    return () => clearTimeout(t);
-  }, [promo, validate]);
+    return () => clearTimeout(handle);
+  }, [promo, validate, t]);
 
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
