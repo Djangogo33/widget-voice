@@ -276,14 +276,15 @@ export function GoogleIcon() {
 }
 
 export function SuccessState({ email }: { email: string }) {
+  const { t } = useI18n();
   return (
     <div className="text-center">
       <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-primary-soft text-primary">
         <Check className="h-6 w-6" />
       </div>
-      <h3 className="mt-4 text-lg font-semibold">Check your inbox</h3>
+      <h3 className="mt-4 text-lg font-semibold">{t("auth.checkInbox")}</h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        We sent a magic link to <span className="font-medium text-foreground">{email}</span>. Click it to sign in.
+        {t("auth.sentTo")} <span className="font-medium text-foreground">{email}</span>. {t("auth.clickToSignIn")}
       </p>
     </div>
   );
