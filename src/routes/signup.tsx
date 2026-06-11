@@ -198,12 +198,16 @@ function SignupPage() {
 export function AuthShell({
   title, subtitle, children,
 }: { title: string; subtitle: string; children: React.ReactNode }) {
+  const { t } = useI18n();
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto flex max-w-md flex-col px-6 py-10">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" /> Back to home
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="h-4 w-4" /> {t("auth.back")}
+          </Link>
+          <LangSwitcher />
+        </div>
         <div className="mt-10 rounded-2xl border border-border bg-card p-7 shadow-sm">
           <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
