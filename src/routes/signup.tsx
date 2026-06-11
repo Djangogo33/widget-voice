@@ -72,7 +72,7 @@ function SignupPage() {
     setError(null);
     const parsed = z.string().email().safeParse(email);
     if (!parsed.success) {
-      setError("Please enter a valid email");
+      setError(t("auth.invalidEmail"));
       return;
     }
     if (referral.trim()) localStorage.setItem("wv_ref", referral.trim().toUpperCase());
