@@ -20,6 +20,7 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
@@ -31,7 +32,7 @@ function LoginPage() {
     setError(null);
     const parsed = z.string().email().safeParse(email);
     if (!parsed.success) {
-      setError("Please enter a valid email");
+      setError(t("auth.invalidEmail"));
       return;
     }
     setLoading("email");
@@ -60,7 +61,7 @@ function LoginPage() {
   }
 
   return (
-    <AuthShell title="Welcome back" subtitle="Log in to your WidgetVoice account.">
+    <AuthShell title={t("auth.login.title")} subtitle={t("auth.login.sub")}>
       {sent ? (
         <SuccessState email={email} />
       ) : (
@@ -71,7 +72,7 @@ function LoginPage() {
             className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold transition hover:bg-muted disabled:opacity-60"
           >
             {loading === "google" ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
-            Continue with Google
+            {t("auth.google")}
           </button>
 
           <Divider />
@@ -79,9 +80,9 @@ function LoginPage() {
           <form onSubmit={handleEmail} className="space-y-3">
             <LabeledInput
               icon={Mail}
-              label="Email"
+              label={t("auth.email")}
               type="email"
-              placeholder="you@company.com"
+              placeholder={t("auth.email.ph")}
               value={email}
               onChange={setEmail}
               autoComplete="email"
@@ -98,13 +99,13 @@ function LoginPage() {
               className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-60"
             >
               {loading === "email" ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-              Send magic link
+              {t("auth.send")}
             </button>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            New here?{" "}
-            <Link to="/signup" className="font-semibold text-primary hover:underline">Create an account</Link>
+            {t("auth.noAccount")}{" "}
+            <Link to="/signup" className="font-semibold text-primary hover:underline">{t("auth.create")}</Link>
           </p>
         </>
       )}
