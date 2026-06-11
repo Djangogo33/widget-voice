@@ -22,6 +22,7 @@ export const Route = createFileRoute("/signup")({
 });
 
 function SignupPage() {
+  const { t } = useI18n();
   const { ref } = Route.useSearch();
   const navigate = useNavigate();
 
