@@ -107,8 +107,8 @@ function SignupPage() {
 
   return (
     <AuthShell
-      title="Create your account"
-      subtitle="Start collecting feedback in minutes. No credit card required."
+      title={t("auth.signup.title")}
+      subtitle={t("auth.signup.sub")}
     >
       {sent ? (
         <SuccessState email={email} />
@@ -120,7 +120,7 @@ function SignupPage() {
             className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold transition hover:bg-muted disabled:opacity-60"
           >
             {loading === "google" ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
-            Continue with Google
+            {t("auth.google")}
           </button>
 
           <Divider />
@@ -128,9 +128,9 @@ function SignupPage() {
           <form onSubmit={handleEmail} className="space-y-3">
             <LabeledInput
               icon={Mail}
-              label="Email"
+              label={t("auth.email")}
               type="email"
-              placeholder="you@company.com"
+              placeholder={t("auth.email.ph")}
               value={email}
               onChange={setEmail}
               autoComplete="email"
@@ -139,26 +139,26 @@ function SignupPage() {
 
             <LabeledInput
               icon={Sparkles}
-              label="Referral code (optional)"
+              label={t("auth.referral")}
               placeholder="FRIEND2024"
               value={referral}
               onChange={(v) => setReferral(v.toUpperCase())}
-              hint={referral ? "You'll get a 14-day trial instead of 7 days." : undefined}
+              hint={referral ? t("auth.referral.hint") : undefined}
             />
 
             <LabeledInput
               icon={Tag}
-              label="Promo code (optional)"
+              label={t("auth.promo")}
               placeholder="LAUNCH20"
               value={promo}
               onChange={(v) => setPromo(v.toUpperCase())}
               hint={
                 promoState.status === "valid"
-                  ? `✓ ${promoState.discount}% off applied`
+                  ? `✓ ${promoState.discount}% ${t("auth.promo.applied")}`
                   : promoState.status === "invalid"
                     ? promoState.message
                     : promoState.status === "checking"
-                      ? "Checking…"
+                      ? t("auth.promo.checking")
                       : undefined
               }
               hintTone={
@@ -180,13 +180,13 @@ function SignupPage() {
               className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-60"
             >
               {loading === "email" ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-              Send magic link
+              {t("auth.send")}
             </button>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
-            <Link to="/login" className="font-semibold text-primary hover:underline">Log in</Link>
+            {t("auth.haveAccount")}{" "}
+            <Link to="/login" className="font-semibold text-primary hover:underline">{t("auth.login")}</Link>
           </p>
         </>
       )}
