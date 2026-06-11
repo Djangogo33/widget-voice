@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useServerFn } from "@tanstack/react-start";
 import { validatePromoCode } from "@/lib/referrals.functions";
+import { useI18n, LangSwitcher } from "@/lib/i18n";
 
 export const Route = createFileRoute("/signup")({
   head: () => ({
