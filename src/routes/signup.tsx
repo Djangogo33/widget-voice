@@ -254,10 +254,11 @@ export function LabeledInput({
 }
 
 export function Divider() {
+  const { t } = useI18n();
   return (
     <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
       <span className="h-px flex-1 bg-border" />
-      <span>or</span>
+      <span>{t("auth.or")}</span>
       <span className="h-px flex-1 bg-border" />
     </div>
   );
