@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useServerFn } from "@tanstack/react-start";
 import { validatePromoCode } from "@/lib/referrals.functions";
+import { useI18n, LangSwitcher } from "@/lib/i18n";
 
 export const Route = createFileRoute("/signup")({
   head: () => ({
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/signup")({
 });
 
 function SignupPage() {
+  const { t } = useI18n();
   const { ref } = Route.useSearch();
   const navigate = useNavigate();
 
@@ -50,7 +52,7 @@ function SignupPage() {
       return;
     }
     setPromoState({ status: "checking" });
-    const t = setTimeout(async () => {
+    const handle = setTimeout(async () => {
       try {
         const res = await validate({ data: { code } });
         if (res.valid) {
@@ -59,18 +61,18 @@ function SignupPage() {
           setPromoState({ status: "invalid", message: res.reason });
         }
       } catch {
-        setPromoState({ status: "invalid", message: "Could not check code" });
+        setPromoState({ status: "invalid", message: t("auth.couldNotCheck") });
       }
     }, 400);
-    return () => clearTimeout(t);
-  }, [promo, validate]);
+    return () => clearTimeout(handle);
+  }, [promo, validate, t]);
 
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     const parsed = z.string().email().safeParse(email);
     if (!parsed.success) {
-      setError("Please enter a valid email");
+      setError(t("auth.invalidEmail"));
       return;
     }
     if (referral.trim()) localStorage.setItem("wv_ref", referral.trim().toUpperCase());
@@ -105,8 +107,8 @@ function SignupPage() {
 
   return (
     <AuthShell
-      title="Create your account"
-      subtitle="Start collecting feedback in minutes. No credit card required."
+      title={t("auth.signup.title")}
+      subtitle={t("auth.signup.sub")}
     >
       {sent ? (
         <SuccessState email={email} />
@@ -118,7 +120,7 @@ function SignupPage() {
             className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold transition hover:bg-muted disabled:opacity-60"
           >
             {loading === "google" ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
-            Continue with Google
+            {t("auth.google")}
           </button>
 
           <Divider />
@@ -126,9 +128,9 @@ function SignupPage() {
           <form onSubmit={handleEmail} className="space-y-3">
             <LabeledInput
               icon={Mail}
-              label="Email"
+              label={t("auth.email")}
               type="email"
-              placeholder="you@company.com"
+              placeholder={t("auth.email.ph")}
               value={email}
               onChange={setEmail}
               autoComplete="email"
@@ -137,26 +139,26 @@ function SignupPage() {
 
             <LabeledInput
               icon={Sparkles}
-              label="Referral code (optional)"
+              label={t("auth.referral")}
               placeholder="FRIEND2024"
               value={referral}
               onChange={(v) => setReferral(v.toUpperCase())}
-              hint={referral ? "You'll get a 14-day trial instead of 7 days." : undefined}
+              hint={referral ? t("auth.referral.hint") : undefined}
             />
 
             <LabeledInput
               icon={Tag}
-              label="Promo code (optional)"
+              label={t("auth.promo")}
               placeholder="LAUNCH20"
               value={promo}
               onChange={(v) => setPromo(v.toUpperCase())}
               hint={
                 promoState.status === "valid"
-                  ? `✓ ${promoState.discount}% off applied`
+                  ? `✓ ${promoState.discount}% ${t("auth.promo.applied")}`
                   : promoState.status === "invalid"
                     ? promoState.message
                     : promoState.status === "checking"
-                      ? "Checking…"
+                      ? t("auth.promo.checking")
                       : undefined
               }
               hintTone={
@@ -178,13 +180,13 @@ function SignupPage() {
               className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-60"
             >
               {loading === "email" ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-              Send magic link
+              {t("auth.send")}
             </button>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
-            <Link to="/login" className="font-semibold text-primary hover:underline">Log in</Link>
+            {t("auth.haveAccount")}{" "}
+            <Link to="/login" className="font-semibold text-primary hover:underline">{t("auth.login")}</Link>
           </p>
         </>
       )}
@@ -196,12 +198,16 @@ function SignupPage() {
 export function AuthShell({
   title, subtitle, children,
 }: { title: string; subtitle: string; children: React.ReactNode }) {
+  const { t } = useI18n();
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto flex max-w-md flex-col px-6 py-10">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" /> Back to home
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="h-4 w-4" /> {t("auth.back")}
+          </Link>
+          <LangSwitcher />
+        </div>
         <div className="mt-10 rounded-2xl border border-border bg-card p-7 shadow-sm">
           <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
@@ -248,10 +254,11 @@ export function LabeledInput({
 }
 
 export function Divider() {
+  const { t } = useI18n();
   return (
     <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
       <span className="h-px flex-1 bg-border" />
-      <span>or</span>
+      <span>{t("auth.or")}</span>
       <span className="h-px flex-1 bg-border" />
     </div>
   );
@@ -269,14 +276,15 @@ export function GoogleIcon() {
 }
 
 export function SuccessState({ email }: { email: string }) {
+  const { t } = useI18n();
   return (
     <div className="text-center">
       <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-primary-soft text-primary">
         <Check className="h-6 w-6" />
       </div>
-      <h3 className="mt-4 text-lg font-semibold">Check your inbox</h3>
+      <h3 className="mt-4 text-lg font-semibold">{t("auth.checkInbox")}</h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        We sent a magic link to <span className="font-medium text-foreground">{email}</span>. Click it to sign in.
+        {t("auth.sentTo")} <span className="font-medium text-foreground">{email}</span>. {t("auth.clickToSignIn")}
       </p>
     </div>
   );
