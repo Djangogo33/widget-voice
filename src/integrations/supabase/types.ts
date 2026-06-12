@@ -14,6 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      feedbacks: {
+        Row: {
+          browser: string | null
+          created_at: string
+          id: string
+          message: string
+          page_url: string | null
+          project_id: string
+          screenshot_url: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          browser?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          page_url?: string | null
+          project_id: string
+          screenshot_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          browser?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          page_url?: string | null
+          project_id?: string
+          screenshot_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feedbacks_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -57,6 +101,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      projects: {
+        Row: {
+          created_at: string
+          domain: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+          widget_key: string
+        }
+        Insert: {
+          created_at?: string
+          domain: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+          widget_key?: string
+        }
+        Update: {
+          created_at?: string
+          domain?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+          widget_key?: string
+        }
+        Relationships: []
       }
       promo_codes: {
         Row: {
