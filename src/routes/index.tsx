@@ -424,7 +424,15 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 
 /* ---------------- Footer ---------------- */
 function Footer() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const fr = lang === "fr";
+  const legalLinks: Array<{ to: string; label: string }> = [
+    { to: "/legal/mentions-legales", label: fr ? "Mentions légales" : "Legal Notice" },
+    { to: "/legal/cgu", label: fr ? "CGU" : "Terms of Service" },
+    { to: "/legal/terms-of-sale", label: fr ? "CGV" : "Terms of Sale" },
+    { to: "/legal/privacy", label: fr ? "Confidentialité" : "Privacy" },
+    { to: "/legal/cookies", label: "Cookies" },
+  ];
   return (
     <footer className="border-t border-border/60 py-14">
       <div className="mx-auto max-w-6xl px-6">
@@ -433,7 +441,7 @@ function Footer() {
             <Logo />
             <p className="mt-3 text-sm text-muted-foreground">{t("footer.tagline")}</p>
           </div>
-          <div className="grid grid-cols-3 gap-10 text-sm">
+          <div className="grid grid-cols-2 gap-10 text-sm sm:grid-cols-3">
             <FooterCol
               title={t("footer.product")}
               links={[t("nav.features"), t("nav.pricing"), t("nav.changelog")]}
@@ -442,10 +450,7 @@ function Footer() {
               title={t("footer.company")}
               links={[t("footer.about"), t("footer.blog"), t("footer.contact")]}
             />
-            <FooterCol
-              title={t("footer.legal")}
-              links={[t("footer.privacy"), t("footer.terms"), t("footer.gdpr")]}
-            />
+            <FooterColLinks title={t("footer.legal")} links={legalLinks} />
           </div>
         </div>
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 text-xs text-muted-foreground md:flex-row">
@@ -464,6 +469,21 @@ function FooterCol({ title, links }: { title: string; links: string[] }) {
       <ul className="space-y-2 text-muted-foreground">
         {links.map((l) => (
           <li key={l}><a href="#" className="hover:text-foreground transition">{l}</a></li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function FooterColLinks({ title, links }: { title: string; links: Array<{ to: string; label: string }> }) {
+  return (
+    <div>
+      <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-foreground">{title}</div>
+      <ul className="space-y-2 text-muted-foreground">
+        {links.map((l) => (
+          <li key={l.to}>
+            <Link to={l.to} className="hover:text-foreground transition">{l.label}</Link>
+          </li>
         ))}
       </ul>
     </div>
