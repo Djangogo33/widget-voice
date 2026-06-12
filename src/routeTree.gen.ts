@@ -13,6 +13,11 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LegalTermsOfSaleRouteImport } from './routes/legal.terms-of-sale'
+import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
+import { Route as LegalMentionsLegalesRouteImport } from './routes/legal.mentions-legales'
+import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
+import { Route as LegalCguRouteImport } from './routes/legal.cgu'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
@@ -39,6 +44,31 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalTermsOfSaleRoute = LegalTermsOfSaleRouteImport.update({
+  id: '/legal/terms-of-sale',
+  path: '/legal/terms-of-sale',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
+  id: '/legal/privacy',
+  path: '/legal/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalMentionsLegalesRoute = LegalMentionsLegalesRouteImport.update({
+  id: '/legal/mentions-legales',
+  path: '/legal/mentions-legales',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalCookiesRoute = LegalCookiesRouteImport.update({
+  id: '/legal/cookies',
+  path: '/legal/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalCguRoute = LegalCguRouteImport.update({
+  id: '/legal/cgu',
+  path: '/legal/cgu',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -94,6 +124,11 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/legal/cgu': typeof LegalCguRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/mentions-legales': typeof LegalMentionsLegalesRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms-of-sale': typeof LegalTermsOfSaleRoute
   '/dashboard/changelog': typeof AuthenticatedDashboardChangelogRoute
   '/dashboard/feature-requests': typeof AuthenticatedDashboardFeatureRequestsRoute
   '/dashboard/feedbacks': typeof AuthenticatedDashboardFeedbacksRoute
@@ -106,6 +141,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/legal/cgu': typeof LegalCguRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/mentions-legales': typeof LegalMentionsLegalesRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms-of-sale': typeof LegalTermsOfSaleRoute
   '/dashboard/changelog': typeof AuthenticatedDashboardChangelogRoute
   '/dashboard/feature-requests': typeof AuthenticatedDashboardFeatureRequestsRoute
   '/dashboard/feedbacks': typeof AuthenticatedDashboardFeedbacksRoute
@@ -121,6 +161,11 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/legal/cgu': typeof LegalCguRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/mentions-legales': typeof LegalMentionsLegalesRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms-of-sale': typeof LegalTermsOfSaleRoute
   '/_authenticated/dashboard/changelog': typeof AuthenticatedDashboardChangelogRoute
   '/_authenticated/dashboard/feature-requests': typeof AuthenticatedDashboardFeatureRequestsRoute
   '/_authenticated/dashboard/feedbacks': typeof AuthenticatedDashboardFeedbacksRoute
@@ -136,6 +181,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/dashboard'
+    | '/legal/cgu'
+    | '/legal/cookies'
+    | '/legal/mentions-legales'
+    | '/legal/privacy'
+    | '/legal/terms-of-sale'
     | '/dashboard/changelog'
     | '/dashboard/feature-requests'
     | '/dashboard/feedbacks'
@@ -148,6 +198,11 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
+    | '/legal/cgu'
+    | '/legal/cookies'
+    | '/legal/mentions-legales'
+    | '/legal/privacy'
+    | '/legal/terms-of-sale'
     | '/dashboard/changelog'
     | '/dashboard/feature-requests'
     | '/dashboard/feedbacks'
@@ -162,6 +217,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/_authenticated/dashboard'
+    | '/legal/cgu'
+    | '/legal/cookies'
+    | '/legal/mentions-legales'
+    | '/legal/privacy'
+    | '/legal/terms-of-sale'
     | '/_authenticated/dashboard/changelog'
     | '/_authenticated/dashboard/feature-requests'
     | '/_authenticated/dashboard/feedbacks'
@@ -176,6 +236,11 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  LegalCguRoute: typeof LegalCguRoute
+  LegalCookiesRoute: typeof LegalCookiesRoute
+  LegalMentionsLegalesRoute: typeof LegalMentionsLegalesRoute
+  LegalPrivacyRoute: typeof LegalPrivacyRoute
+  LegalTermsOfSaleRoute: typeof LegalTermsOfSaleRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -206,6 +271,41 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/terms-of-sale': {
+      id: '/legal/terms-of-sale'
+      path: '/legal/terms-of-sale'
+      fullPath: '/legal/terms-of-sale'
+      preLoaderRoute: typeof LegalTermsOfSaleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/privacy': {
+      id: '/legal/privacy'
+      path: '/legal/privacy'
+      fullPath: '/legal/privacy'
+      preLoaderRoute: typeof LegalPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/mentions-legales': {
+      id: '/legal/mentions-legales'
+      path: '/legal/mentions-legales'
+      fullPath: '/legal/mentions-legales'
+      preLoaderRoute: typeof LegalMentionsLegalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/cookies': {
+      id: '/legal/cookies'
+      path: '/legal/cookies'
+      fullPath: '/legal/cookies'
+      preLoaderRoute: typeof LegalCookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/cgu': {
+      id: '/legal/cgu'
+      path: '/legal/cgu'
+      fullPath: '/legal/cgu'
+      preLoaderRoute: typeof LegalCguRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard': {
@@ -310,7 +410,22 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  LegalCguRoute: LegalCguRoute,
+  LegalCookiesRoute: LegalCookiesRoute,
+  LegalMentionsLegalesRoute: LegalMentionsLegalesRoute,
+  LegalPrivacyRoute: LegalPrivacyRoute,
+  LegalTermsOfSaleRoute: LegalTermsOfSaleRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
