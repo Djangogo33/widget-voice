@@ -14,6 +14,13 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
+import { Route as AuthenticatedDashboardReferralsRouteImport } from './routes/_authenticated/dashboard.referrals'
+import { Route as AuthenticatedDashboardProjectsRouteImport } from './routes/_authenticated/dashboard.projects'
+import { Route as AuthenticatedDashboardFeedbacksRouteImport } from './routes/_authenticated/dashboard.feedbacks'
+import { Route as AuthenticatedDashboardFeatureRequestsRouteImport } from './routes/_authenticated/dashboard.feature-requests'
+import { Route as AuthenticatedDashboardChangelogRouteImport } from './routes/_authenticated/dashboard.changelog'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -39,18 +46,73 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDashboardIndexRoute =
+  AuthenticatedDashboardIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardSettingsRoute =
+  AuthenticatedDashboardSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardReferralsRoute =
+  AuthenticatedDashboardReferralsRouteImport.update({
+    id: '/referrals',
+    path: '/referrals',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardProjectsRoute =
+  AuthenticatedDashboardProjectsRouteImport.update({
+    id: '/projects',
+    path: '/projects',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardFeedbacksRoute =
+  AuthenticatedDashboardFeedbacksRouteImport.update({
+    id: '/feedbacks',
+    path: '/feedbacks',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardFeatureRequestsRoute =
+  AuthenticatedDashboardFeatureRequestsRouteImport.update({
+    id: '/feature-requests',
+    path: '/feature-requests',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardChangelogRoute =
+  AuthenticatedDashboardChangelogRouteImport.update({
+    id: '/changelog',
+    path: '/changelog',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/dashboard/changelog': typeof AuthenticatedDashboardChangelogRoute
+  '/dashboard/feature-requests': typeof AuthenticatedDashboardFeatureRequestsRoute
+  '/dashboard/feedbacks': typeof AuthenticatedDashboardFeedbacksRoute
+  '/dashboard/projects': typeof AuthenticatedDashboardProjectsRoute
+  '/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
+  '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/dashboard/changelog': typeof AuthenticatedDashboardChangelogRoute
+  '/dashboard/feature-requests': typeof AuthenticatedDashboardFeatureRequestsRoute
+  '/dashboard/feedbacks': typeof AuthenticatedDashboardFeedbacksRoute
+  '/dashboard/projects': typeof AuthenticatedDashboardProjectsRoute
+  '/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
+  '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -58,13 +120,41 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/_authenticated/dashboard/changelog': typeof AuthenticatedDashboardChangelogRoute
+  '/_authenticated/dashboard/feature-requests': typeof AuthenticatedDashboardFeatureRequestsRoute
+  '/_authenticated/dashboard/feedbacks': typeof AuthenticatedDashboardFeedbacksRoute
+  '/_authenticated/dashboard/projects': typeof AuthenticatedDashboardProjectsRoute
+  '/_authenticated/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
+  '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/signup' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/dashboard'
+    | '/dashboard/changelog'
+    | '/dashboard/feature-requests'
+    | '/dashboard/feedbacks'
+    | '/dashboard/projects'
+    | '/dashboard/referrals'
+    | '/dashboard/settings'
+    | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/signup' | '/dashboard'
+  to:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/dashboard/changelog'
+    | '/dashboard/feature-requests'
+    | '/dashboard/feedbacks'
+    | '/dashboard/projects'
+    | '/dashboard/referrals'
+    | '/dashboard/settings'
+    | '/dashboard'
   id:
     | '__root__'
     | '/'
@@ -72,6 +162,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/_authenticated/dashboard'
+    | '/_authenticated/dashboard/changelog'
+    | '/_authenticated/dashboard/feature-requests'
+    | '/_authenticated/dashboard/feedbacks'
+    | '/_authenticated/dashboard/projects'
+    | '/_authenticated/dashboard/referrals'
+    | '/_authenticated/dashboard/settings'
+    | '/_authenticated/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,15 +215,91 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/settings': {
+      id: '/_authenticated/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/referrals': {
+      id: '/_authenticated/dashboard/referrals'
+      path: '/referrals'
+      fullPath: '/dashboard/referrals'
+      preLoaderRoute: typeof AuthenticatedDashboardReferralsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/projects': {
+      id: '/_authenticated/dashboard/projects'
+      path: '/projects'
+      fullPath: '/dashboard/projects'
+      preLoaderRoute: typeof AuthenticatedDashboardProjectsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/feedbacks': {
+      id: '/_authenticated/dashboard/feedbacks'
+      path: '/feedbacks'
+      fullPath: '/dashboard/feedbacks'
+      preLoaderRoute: typeof AuthenticatedDashboardFeedbacksRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/feature-requests': {
+      id: '/_authenticated/dashboard/feature-requests'
+      path: '/feature-requests'
+      fullPath: '/dashboard/feature-requests'
+      preLoaderRoute: typeof AuthenticatedDashboardFeatureRequestsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/changelog': {
+      id: '/_authenticated/dashboard/changelog'
+      path: '/changelog'
+      fullPath: '/dashboard/changelog'
+      preLoaderRoute: typeof AuthenticatedDashboardChangelogRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
   }
 }
 
+interface AuthenticatedDashboardRouteChildren {
+  AuthenticatedDashboardChangelogRoute: typeof AuthenticatedDashboardChangelogRoute
+  AuthenticatedDashboardFeatureRequestsRoute: typeof AuthenticatedDashboardFeatureRequestsRoute
+  AuthenticatedDashboardFeedbacksRoute: typeof AuthenticatedDashboardFeedbacksRoute
+  AuthenticatedDashboardProjectsRoute: typeof AuthenticatedDashboardProjectsRoute
+  AuthenticatedDashboardReferralsRoute: typeof AuthenticatedDashboardReferralsRoute
+  AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+  AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+}
+
+const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
+  {
+    AuthenticatedDashboardChangelogRoute: AuthenticatedDashboardChangelogRoute,
+    AuthenticatedDashboardFeatureRequestsRoute:
+      AuthenticatedDashboardFeatureRequestsRoute,
+    AuthenticatedDashboardFeedbacksRoute: AuthenticatedDashboardFeedbacksRoute,
+    AuthenticatedDashboardProjectsRoute: AuthenticatedDashboardProjectsRoute,
+    AuthenticatedDashboardReferralsRoute: AuthenticatedDashboardReferralsRoute,
+    AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
+    AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  }
+
+const AuthenticatedDashboardRouteWithChildren =
+  AuthenticatedDashboardRoute._addFileChildren(
+    AuthenticatedDashboardRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
