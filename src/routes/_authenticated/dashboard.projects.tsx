@@ -40,7 +40,8 @@ function ProjectsPage() {
   }
 
   function snippetFor(key: string) {
-    return `<script src="https://widget-voice.lovable.app/widget.js" data-key="${key}" async></script>`;
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    return `<script src="${origin}/api/public/widget.js" data-key="${key}" async></script>`;
   }
 
   function copySnippet(id: string, key: string) {
