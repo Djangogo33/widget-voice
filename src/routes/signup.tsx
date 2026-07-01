@@ -41,6 +41,14 @@ function SignupPage() {
   }>({ status: "idle" });
 
   useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) navigate({ to: "/dashboard", replace: true });
+    });
+  }, [navigate]);
+
+
+
+  useEffect(() => {
     if (ref) localStorage.setItem("wv_ref", ref.toUpperCase());
   }, [ref]);
 
