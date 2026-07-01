@@ -21,6 +21,7 @@ import { Route as LegalCguRouteImport } from './routes/legal.cgu'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as ApiPublicWidgetDotjsRouteImport } from './routes/api/public/widget[.]js'
+import { Route as ApiPublicFeedbacksRouteImport } from './routes/api/public/feedbacks'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardReferralsRouteImport } from './routes/_authenticated/dashboard.referrals'
 import { Route as AuthenticatedDashboardProjectsRouteImport } from './routes/_authenticated/dashboard.projects'
@@ -88,6 +89,11 @@ const ApiPublicWidgetDotjsRoute = ApiPublicWidgetDotjsRouteImport.update({
   path: '/api/public/widget.js',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicFeedbacksRoute = ApiPublicFeedbacksRouteImport.update({
+  id: '/api/public/feedbacks',
+  path: '/api/public/feedbacks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDashboardSettingsRoute =
   AuthenticatedDashboardSettingsRouteImport.update({
     id: '/settings',
@@ -141,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/projects': typeof AuthenticatedDashboardProjectsRoute
   '/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/dashboard/projects': typeof AuthenticatedDashboardProjectsRoute
   '/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
 }
@@ -180,6 +188,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/projects': typeof AuthenticatedDashboardProjectsRoute
   '/_authenticated/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
@@ -201,6 +210,7 @@ export interface FileRouteTypes {
     | '/dashboard/projects'
     | '/dashboard/referrals'
     | '/dashboard/settings'
+    | '/api/public/feedbacks'
     | '/api/public/widget.js'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
@@ -219,6 +229,7 @@ export interface FileRouteTypes {
     | '/dashboard/projects'
     | '/dashboard/referrals'
     | '/dashboard/settings'
+    | '/api/public/feedbacks'
     | '/api/public/widget.js'
     | '/dashboard'
   id:
@@ -239,6 +250,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/projects'
     | '/_authenticated/dashboard/referrals'
     | '/_authenticated/dashboard/settings'
+    | '/api/public/feedbacks'
     | '/api/public/widget.js'
     | '/_authenticated/dashboard/'
   fileRoutesById: FileRoutesById
@@ -253,6 +265,7 @@ export interface RootRouteChildren {
   LegalMentionsLegalesRoute: typeof LegalMentionsLegalesRoute
   LegalPrivacyRoute: typeof LegalPrivacyRoute
   LegalTermsOfSaleRoute: typeof LegalTermsOfSaleRoute
+  ApiPublicFeedbacksRoute: typeof ApiPublicFeedbacksRoute
   ApiPublicWidgetDotjsRoute: typeof ApiPublicWidgetDotjsRoute
 }
 
@@ -340,6 +353,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/widget.js'
       fullPath: '/api/public/widget.js'
       preLoaderRoute: typeof ApiPublicWidgetDotjsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/feedbacks': {
+      id: '/api/public/feedbacks'
+      path: '/api/public/feedbacks'
+      fullPath: '/api/public/feedbacks'
+      preLoaderRoute: typeof ApiPublicFeedbacksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard/settings': {
@@ -435,6 +455,7 @@ const rootRouteChildren: RootRouteChildren = {
   LegalMentionsLegalesRoute: LegalMentionsLegalesRoute,
   LegalPrivacyRoute: LegalPrivacyRoute,
   LegalTermsOfSaleRoute: LegalTermsOfSaleRoute,
+  ApiPublicFeedbacksRoute: ApiPublicFeedbacksRoute,
   ApiPublicWidgetDotjsRoute: ApiPublicWidgetDotjsRoute,
 }
 export const routeTree = rootRouteImport
