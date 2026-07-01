@@ -27,6 +27,13 @@ function LoginPage() {
   const [loading, setLoading] = useState<"" | "email" | "google">("");
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) navigate({ to: "/dashboard", replace: true });
+    });
+  }, [navigate]);
+
+
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
