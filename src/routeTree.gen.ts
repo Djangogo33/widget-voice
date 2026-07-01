@@ -21,6 +21,7 @@ import { Route as LegalCguRouteImport } from './routes/legal.cgu'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as ApiPublicWidgetDotjsRouteImport } from './routes/api/public/widget[.]js'
+import { Route as ApiPublicVoteRouteImport } from './routes/api/public/vote'
 import { Route as ApiPublicFeedbacksRouteImport } from './routes/api/public/feedbacks'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardReferralsRouteImport } from './routes/_authenticated/dashboard.referrals'
@@ -89,6 +90,11 @@ const ApiPublicWidgetDotjsRoute = ApiPublicWidgetDotjsRouteImport.update({
   path: '/api/public/widget.js',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicVoteRoute = ApiPublicVoteRouteImport.update({
+  id: '/api/public/vote',
+  path: '/api/public/vote',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicFeedbacksRoute = ApiPublicFeedbacksRouteImport.update({
   id: '/api/public/feedbacks',
   path: '/api/public/feedbacks',
@@ -148,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
+  '/api/public/vote': typeof ApiPublicVoteRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
@@ -167,6 +174,7 @@ export interface FileRoutesByTo {
   '/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
+  '/api/public/vote': typeof ApiPublicVoteRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
 }
@@ -189,6 +197,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
+  '/api/public/vote': typeof ApiPublicVoteRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
@@ -211,6 +220,7 @@ export interface FileRouteTypes {
     | '/dashboard/referrals'
     | '/dashboard/settings'
     | '/api/public/feedbacks'
+    | '/api/public/vote'
     | '/api/public/widget.js'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
@@ -230,6 +240,7 @@ export interface FileRouteTypes {
     | '/dashboard/referrals'
     | '/dashboard/settings'
     | '/api/public/feedbacks'
+    | '/api/public/vote'
     | '/api/public/widget.js'
     | '/dashboard'
   id:
@@ -251,6 +262,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/referrals'
     | '/_authenticated/dashboard/settings'
     | '/api/public/feedbacks'
+    | '/api/public/vote'
     | '/api/public/widget.js'
     | '/_authenticated/dashboard/'
   fileRoutesById: FileRoutesById
@@ -266,6 +278,7 @@ export interface RootRouteChildren {
   LegalPrivacyRoute: typeof LegalPrivacyRoute
   LegalTermsOfSaleRoute: typeof LegalTermsOfSaleRoute
   ApiPublicFeedbacksRoute: typeof ApiPublicFeedbacksRoute
+  ApiPublicVoteRoute: typeof ApiPublicVoteRoute
   ApiPublicWidgetDotjsRoute: typeof ApiPublicWidgetDotjsRoute
 }
 
@@ -353,6 +366,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/widget.js'
       fullPath: '/api/public/widget.js'
       preLoaderRoute: typeof ApiPublicWidgetDotjsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/vote': {
+      id: '/api/public/vote'
+      path: '/api/public/vote'
+      fullPath: '/api/public/vote'
+      preLoaderRoute: typeof ApiPublicVoteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/feedbacks': {
@@ -456,6 +476,7 @@ const rootRouteChildren: RootRouteChildren = {
   LegalPrivacyRoute: LegalPrivacyRoute,
   LegalTermsOfSaleRoute: LegalTermsOfSaleRoute,
   ApiPublicFeedbacksRoute: ApiPublicFeedbacksRoute,
+  ApiPublicVoteRoute: ApiPublicVoteRoute,
   ApiPublicWidgetDotjsRoute: ApiPublicWidgetDotjsRoute,
 }
 export const routeTree = rootRouteImport
