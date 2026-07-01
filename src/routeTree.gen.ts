@@ -20,6 +20,7 @@ import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
 import { Route as LegalCguRouteImport } from './routes/legal.cgu'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as PSlugRoadmapRouteImport } from './routes/p.$slug.roadmap'
 import { Route as PSlugChangelogRouteImport } from './routes/p.$slug.changelog'
 import { Route as ApiPublicWidgetDotjsRouteImport } from './routes/api/public/widget[.]js'
 import { Route as ApiPublicVoteRouteImport } from './routes/api/public/vote'
@@ -86,6 +87,11 @@ const AuthenticatedDashboardIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const PSlugRoadmapRoute = PSlugRoadmapRouteImport.update({
+  id: '/p/$slug/roadmap',
+  path: '/p/$slug/roadmap',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PSlugChangelogRoute = PSlugChangelogRouteImport.update({
   id: '/p/$slug/changelog',
   path: '/p/$slug/changelog',
@@ -163,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/api/public/vote': typeof ApiPublicVoteRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
   '/p/$slug/changelog': typeof PSlugChangelogRoute
+  '/p/$slug/roadmap': typeof PSlugRoadmapRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesByTo {
@@ -184,6 +191,7 @@ export interface FileRoutesByTo {
   '/api/public/vote': typeof ApiPublicVoteRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
   '/p/$slug/changelog': typeof PSlugChangelogRoute
+  '/p/$slug/roadmap': typeof PSlugRoadmapRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -208,6 +216,7 @@ export interface FileRoutesById {
   '/api/public/vote': typeof ApiPublicVoteRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
   '/p/$slug/changelog': typeof PSlugChangelogRoute
+  '/p/$slug/roadmap': typeof PSlugRoadmapRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRouteTypes {
@@ -232,6 +241,7 @@ export interface FileRouteTypes {
     | '/api/public/vote'
     | '/api/public/widget.js'
     | '/p/$slug/changelog'
+    | '/p/$slug/roadmap'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
     | '/api/public/vote'
     | '/api/public/widget.js'
     | '/p/$slug/changelog'
+    | '/p/$slug/roadmap'
     | '/dashboard'
   id:
     | '__root__'
@@ -276,6 +287,7 @@ export interface FileRouteTypes {
     | '/api/public/vote'
     | '/api/public/widget.js'
     | '/p/$slug/changelog'
+    | '/p/$slug/roadmap'
     | '/_authenticated/dashboard/'
   fileRoutesById: FileRoutesById
 }
@@ -293,6 +305,7 @@ export interface RootRouteChildren {
   ApiPublicVoteRoute: typeof ApiPublicVoteRoute
   ApiPublicWidgetDotjsRoute: typeof ApiPublicWidgetDotjsRoute
   PSlugChangelogRoute: typeof PSlugChangelogRoute
+  PSlugRoadmapRoute: typeof PSlugRoadmapRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -373,6 +386,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/p/$slug/roadmap': {
+      id: '/p/$slug/roadmap'
+      path: '/p/$slug/roadmap'
+      fullPath: '/p/$slug/roadmap'
+      preLoaderRoute: typeof PSlugRoadmapRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/p/$slug/changelog': {
       id: '/p/$slug/changelog'
@@ -499,6 +519,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicVoteRoute: ApiPublicVoteRoute,
   ApiPublicWidgetDotjsRoute: ApiPublicWidgetDotjsRoute,
   PSlugChangelogRoute: PSlugChangelogRoute,
+  PSlugRoadmapRoute: PSlugRoadmapRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
