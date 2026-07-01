@@ -17,6 +17,12 @@ function ProjectsPage() {
   const [err, setErr] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  // Onboarding: open the modal on first visit when the account has no projects.
+  useEffect(() => {
+    if (projects.length === 0) setOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projects.length]);
+
   async function create() {
     setErr(null);
     if (!name.trim() || !domain.trim()) {
