@@ -14,6 +14,117 @@ export type Database = {
   }
   public: {
     Tables: {
+      changelog_entries: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          project_id: string
+          published: boolean
+          published_at: string
+          tag: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          id?: string
+          project_id: string
+          published?: boolean
+          published_at?: string
+          tag?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          project_id?: string
+          published?: boolean
+          published_at?: string
+          tag?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "changelog_entries_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feature_requests: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          project_id: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          project_id: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          project_id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_requests_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feature_votes: {
+        Row: {
+          created_at: string
+          feature_request_id: string
+          id: string
+          voter_id: string
+        }
+        Insert: {
+          created_at?: string
+          feature_request_id: string
+          id?: string
+          voter_id: string
+        }
+        Update: {
+          created_at?: string
+          feature_request_id?: string
+          id?: string
+          voter_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_votes_feature_request_id_fkey"
+            columns: ["feature_request_id"]
+            isOneToOne: false
+            referencedRelation: "feature_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feedbacks: {
         Row: {
           browser: string | null
@@ -108,6 +219,7 @@ export type Database = {
           domain: string
           id: string
           name: string
+          slug: string
           updated_at: string
           user_id: string
           widget_key: string
@@ -117,6 +229,7 @@ export type Database = {
           domain: string
           id?: string
           name: string
+          slug: string
           updated_at?: string
           user_id: string
           widget_key?: string
@@ -126,6 +239,7 @@ export type Database = {
           domain?: string
           id?: string
           name?: string
+          slug?: string
           updated_at?: string
           user_id?: string
           widget_key?: string
@@ -213,7 +327,23 @@ export type Database = {
         Args: { _code: string; _new_user_id: string }
         Returns: boolean
       }
+      cast_public_vote: {
+        Args: { _feature_id: string; _voter: string }
+        Returns: number
+      }
       generate_referral_code: { Args: never; Returns: string }
+      get_public_project: { Args: { _slug: string }; Returns: Json }
+      slugify: { Args: { _v: string }; Returns: string }
+      submit_public_feedback: {
+        Args: {
+          _browser: string
+          _message: string
+          _page_url: string
+          _screenshot_url: string
+          _widget_key: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
