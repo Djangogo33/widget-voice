@@ -20,6 +20,7 @@ import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
 import { Route as LegalCguRouteImport } from './routes/legal.cgu'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as PSlugChangelogRouteImport } from './routes/p.$slug.changelog'
 import { Route as ApiPublicWidgetDotjsRouteImport } from './routes/api/public/widget[.]js'
 import { Route as ApiPublicVoteRouteImport } from './routes/api/public/vote'
 import { Route as ApiPublicFeedbacksRouteImport } from './routes/api/public/feedbacks'
@@ -85,6 +86,11 @@ const AuthenticatedDashboardIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const PSlugChangelogRoute = PSlugChangelogRouteImport.update({
+  id: '/p/$slug/changelog',
+  path: '/p/$slug/changelog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicWidgetDotjsRoute = ApiPublicWidgetDotjsRouteImport.update({
   id: '/api/public/widget.js',
   path: '/api/public/widget.js',
@@ -156,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
   '/api/public/vote': typeof ApiPublicVoteRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
+  '/p/$slug/changelog': typeof PSlugChangelogRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesByTo {
@@ -176,6 +183,7 @@ export interface FileRoutesByTo {
   '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
   '/api/public/vote': typeof ApiPublicVoteRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
+  '/p/$slug/changelog': typeof PSlugChangelogRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -199,6 +207,7 @@ export interface FileRoutesById {
   '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
   '/api/public/vote': typeof ApiPublicVoteRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
+  '/p/$slug/changelog': typeof PSlugChangelogRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRouteTypes {
@@ -222,6 +231,7 @@ export interface FileRouteTypes {
     | '/api/public/feedbacks'
     | '/api/public/vote'
     | '/api/public/widget.js'
+    | '/p/$slug/changelog'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -242,6 +252,7 @@ export interface FileRouteTypes {
     | '/api/public/feedbacks'
     | '/api/public/vote'
     | '/api/public/widget.js'
+    | '/p/$slug/changelog'
     | '/dashboard'
   id:
     | '__root__'
@@ -264,6 +275,7 @@ export interface FileRouteTypes {
     | '/api/public/feedbacks'
     | '/api/public/vote'
     | '/api/public/widget.js'
+    | '/p/$slug/changelog'
     | '/_authenticated/dashboard/'
   fileRoutesById: FileRoutesById
 }
@@ -280,6 +292,7 @@ export interface RootRouteChildren {
   ApiPublicFeedbacksRoute: typeof ApiPublicFeedbacksRoute
   ApiPublicVoteRoute: typeof ApiPublicVoteRoute
   ApiPublicWidgetDotjsRoute: typeof ApiPublicWidgetDotjsRoute
+  PSlugChangelogRoute: typeof PSlugChangelogRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -360,6 +373,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/p/$slug/changelog': {
+      id: '/p/$slug/changelog'
+      path: '/p/$slug/changelog'
+      fullPath: '/p/$slug/changelog'
+      preLoaderRoute: typeof PSlugChangelogRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/widget.js': {
       id: '/api/public/widget.js'
@@ -478,6 +498,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicFeedbacksRoute: ApiPublicFeedbacksRoute,
   ApiPublicVoteRoute: ApiPublicVoteRoute,
   ApiPublicWidgetDotjsRoute: ApiPublicWidgetDotjsRoute,
+  PSlugChangelogRoute: PSlugChangelogRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
