@@ -41,6 +41,14 @@ function SignupPage() {
   }>({ status: "idle" });
 
   useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) navigate({ to: "/dashboard", replace: true });
+    });
+  }, [navigate]);
+
+
+
+  useEffect(() => {
     if (ref) localStorage.setItem("wv_ref", ref.toUpperCase());
   }, [ref]);
 
@@ -94,7 +102,7 @@ function SignupPage() {
     if (promo.trim()) localStorage.setItem("wv_promo", promo.trim().toUpperCase());
     setLoading("google");
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}/dashboard`,
+      redirect_uri: window.location.origin,
     });
     if (result.error) {
       setLoading("");

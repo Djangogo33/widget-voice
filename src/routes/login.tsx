@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import { Loader2, Mail } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,6 +27,13 @@ function LoginPage() {
   const [loading, setLoading] = useState<"" | "email" | "google">("");
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) navigate({ to: "/dashboard", replace: true });
+    });
+  }, [navigate]);
+
+
   async function handleEmail(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -49,7 +56,7 @@ function LoginPage() {
     setError(null);
     setLoading("google");
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}/dashboard`,
+      redirect_uri: window.location.origin,
     });
     if (result.error) {
       setLoading("");
