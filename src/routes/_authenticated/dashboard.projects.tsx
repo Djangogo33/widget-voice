@@ -28,7 +28,7 @@ function ProjectsPage() {
     if (!user) { setBusy(false); return; }
     const { data, error } = await supabase
       .from("projects")
-      .insert({ name: name.trim(), domain: domain.trim(), user_id: user.id })
+      .insert({ name: name.trim(), domain: domain.trim(), user_id: user.id, slug: "" })
       .select()
       .single();
     setBusy(false);
