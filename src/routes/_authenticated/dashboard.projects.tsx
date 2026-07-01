@@ -17,6 +17,12 @@ function ProjectsPage() {
   const [err, setErr] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  // Onboarding: open the modal on first visit when the account has no projects.
+  useEffect(() => {
+    if (projects.length === 0) setOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projects.length]);
+
   async function create() {
     setErr(null);
     if (!name.trim() || !domain.trim()) {
@@ -28,7 +34,7 @@ function ProjectsPage() {
     if (!user) { setBusy(false); return; }
     const { data, error } = await supabase
       .from("projects")
-      .insert({ name: name.trim(), domain: domain.trim(), user_id: user.id })
+      .insert({ name: name.trim(), domain: domain.trim(), user_id: user.id, slug: "" })
       .select()
       .single();
     setBusy(false);
@@ -40,7 +46,8 @@ function ProjectsPage() {
   }
 
   function snippetFor(key: string) {
-    return `<script src="https://widget-voice.lovable.app/widget.js" data-key="${key}" async></script>`;
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    return `<script src="${origin}/api/public/widget.js" data-key="${key}" async></script>`;
   }
 
   function copySnippet(id: string, key: string) {

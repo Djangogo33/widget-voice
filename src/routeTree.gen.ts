@@ -20,6 +20,11 @@ import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
 import { Route as LegalCguRouteImport } from './routes/legal.cgu'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as PSlugRoadmapRouteImport } from './routes/p.$slug.roadmap'
+import { Route as PSlugChangelogRouteImport } from './routes/p.$slug.changelog'
+import { Route as ApiPublicWidgetDotjsRouteImport } from './routes/api/public/widget[.]js'
+import { Route as ApiPublicVoteRouteImport } from './routes/api/public/vote'
+import { Route as ApiPublicFeedbacksRouteImport } from './routes/api/public/feedbacks'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardReferralsRouteImport } from './routes/_authenticated/dashboard.referrals'
 import { Route as AuthenticatedDashboardProjectsRouteImport } from './routes/_authenticated/dashboard.projects'
@@ -82,6 +87,31 @@ const AuthenticatedDashboardIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const PSlugRoadmapRoute = PSlugRoadmapRouteImport.update({
+  id: '/p/$slug/roadmap',
+  path: '/p/$slug/roadmap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PSlugChangelogRoute = PSlugChangelogRouteImport.update({
+  id: '/p/$slug/changelog',
+  path: '/p/$slug/changelog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicWidgetDotjsRoute = ApiPublicWidgetDotjsRouteImport.update({
+  id: '/api/public/widget.js',
+  path: '/api/public/widget.js',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicVoteRoute = ApiPublicVoteRouteImport.update({
+  id: '/api/public/vote',
+  path: '/api/public/vote',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicFeedbacksRoute = ApiPublicFeedbacksRouteImport.update({
+  id: '/api/public/feedbacks',
+  path: '/api/public/feedbacks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDashboardSettingsRoute =
   AuthenticatedDashboardSettingsRouteImport.update({
     id: '/settings',
@@ -135,6 +165,11 @@ export interface FileRoutesByFullPath {
   '/dashboard/projects': typeof AuthenticatedDashboardProjectsRoute
   '/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
+  '/api/public/vote': typeof ApiPublicVoteRoute
+  '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
+  '/p/$slug/changelog': typeof PSlugChangelogRoute
+  '/p/$slug/roadmap': typeof PSlugRoadmapRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesByTo {
@@ -152,6 +187,11 @@ export interface FileRoutesByTo {
   '/dashboard/projects': typeof AuthenticatedDashboardProjectsRoute
   '/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
+  '/api/public/vote': typeof ApiPublicVoteRoute
+  '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
+  '/p/$slug/changelog': typeof PSlugChangelogRoute
+  '/p/$slug/roadmap': typeof PSlugRoadmapRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -172,6 +212,11 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/projects': typeof AuthenticatedDashboardProjectsRoute
   '/_authenticated/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
+  '/api/public/vote': typeof ApiPublicVoteRoute
+  '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
+  '/p/$slug/changelog': typeof PSlugChangelogRoute
+  '/p/$slug/roadmap': typeof PSlugRoadmapRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRouteTypes {
@@ -192,6 +237,11 @@ export interface FileRouteTypes {
     | '/dashboard/projects'
     | '/dashboard/referrals'
     | '/dashboard/settings'
+    | '/api/public/feedbacks'
+    | '/api/public/vote'
+    | '/api/public/widget.js'
+    | '/p/$slug/changelog'
+    | '/p/$slug/roadmap'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -209,6 +259,11 @@ export interface FileRouteTypes {
     | '/dashboard/projects'
     | '/dashboard/referrals'
     | '/dashboard/settings'
+    | '/api/public/feedbacks'
+    | '/api/public/vote'
+    | '/api/public/widget.js'
+    | '/p/$slug/changelog'
+    | '/p/$slug/roadmap'
     | '/dashboard'
   id:
     | '__root__'
@@ -228,6 +283,11 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/projects'
     | '/_authenticated/dashboard/referrals'
     | '/_authenticated/dashboard/settings'
+    | '/api/public/feedbacks'
+    | '/api/public/vote'
+    | '/api/public/widget.js'
+    | '/p/$slug/changelog'
+    | '/p/$slug/roadmap'
     | '/_authenticated/dashboard/'
   fileRoutesById: FileRoutesById
 }
@@ -241,6 +301,11 @@ export interface RootRouteChildren {
   LegalMentionsLegalesRoute: typeof LegalMentionsLegalesRoute
   LegalPrivacyRoute: typeof LegalPrivacyRoute
   LegalTermsOfSaleRoute: typeof LegalTermsOfSaleRoute
+  ApiPublicFeedbacksRoute: typeof ApiPublicFeedbacksRoute
+  ApiPublicVoteRoute: typeof ApiPublicVoteRoute
+  ApiPublicWidgetDotjsRoute: typeof ApiPublicWidgetDotjsRoute
+  PSlugChangelogRoute: typeof PSlugChangelogRoute
+  PSlugRoadmapRoute: typeof PSlugRoadmapRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -321,6 +386,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/p/$slug/roadmap': {
+      id: '/p/$slug/roadmap'
+      path: '/p/$slug/roadmap'
+      fullPath: '/p/$slug/roadmap'
+      preLoaderRoute: typeof PSlugRoadmapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/p/$slug/changelog': {
+      id: '/p/$slug/changelog'
+      path: '/p/$slug/changelog'
+      fullPath: '/p/$slug/changelog'
+      preLoaderRoute: typeof PSlugChangelogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/widget.js': {
+      id: '/api/public/widget.js'
+      path: '/api/public/widget.js'
+      fullPath: '/api/public/widget.js'
+      preLoaderRoute: typeof ApiPublicWidgetDotjsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/vote': {
+      id: '/api/public/vote'
+      path: '/api/public/vote'
+      fullPath: '/api/public/vote'
+      preLoaderRoute: typeof ApiPublicVoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/feedbacks': {
+      id: '/api/public/feedbacks'
+      path: '/api/public/feedbacks'
+      fullPath: '/api/public/feedbacks'
+      preLoaderRoute: typeof ApiPublicFeedbacksRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard/settings': {
       id: '/_authenticated/dashboard/settings'
@@ -415,6 +515,11 @@ const rootRouteChildren: RootRouteChildren = {
   LegalMentionsLegalesRoute: LegalMentionsLegalesRoute,
   LegalPrivacyRoute: LegalPrivacyRoute,
   LegalTermsOfSaleRoute: LegalTermsOfSaleRoute,
+  ApiPublicFeedbacksRoute: ApiPublicFeedbacksRoute,
+  ApiPublicVoteRoute: ApiPublicVoteRoute,
+  ApiPublicWidgetDotjsRoute: ApiPublicWidgetDotjsRoute,
+  PSlugChangelogRoute: PSlugChangelogRoute,
+  PSlugRoadmapRoute: PSlugRoadmapRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
