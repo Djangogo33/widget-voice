@@ -25,6 +25,7 @@ import { Route as PSlugChangelogRouteImport } from './routes/p.$slug.changelog'
 import { Route as ApiPublicWidgetDotjsRouteImport } from './routes/api/public/widget[.]js'
 import { Route as ApiPublicVoteRouteImport } from './routes/api/public/vote'
 import { Route as ApiPublicFeedbacksRouteImport } from './routes/api/public/feedbacks'
+import { Route as AuthenticatedDashboardWebhooksRouteImport } from './routes/_authenticated/dashboard.webhooks'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardReferralsRouteImport } from './routes/_authenticated/dashboard.referrals'
 import { Route as AuthenticatedDashboardProjectsRouteImport } from './routes/_authenticated/dashboard.projects'
@@ -112,6 +113,12 @@ const ApiPublicFeedbacksRoute = ApiPublicFeedbacksRouteImport.update({
   path: '/api/public/feedbacks',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDashboardWebhooksRoute =
+  AuthenticatedDashboardWebhooksRouteImport.update({
+    id: '/webhooks',
+    path: '/webhooks',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardSettingsRoute =
   AuthenticatedDashboardSettingsRouteImport.update({
     id: '/settings',
@@ -165,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/projects': typeof AuthenticatedDashboardProjectsRoute
   '/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/webhooks': typeof AuthenticatedDashboardWebhooksRoute
   '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
   '/api/public/vote': typeof ApiPublicVoteRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
@@ -187,6 +195,7 @@ export interface FileRoutesByTo {
   '/dashboard/projects': typeof AuthenticatedDashboardProjectsRoute
   '/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/webhooks': typeof AuthenticatedDashboardWebhooksRoute
   '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
   '/api/public/vote': typeof ApiPublicVoteRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
@@ -212,6 +221,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/projects': typeof AuthenticatedDashboardProjectsRoute
   '/_authenticated/dashboard/referrals': typeof AuthenticatedDashboardReferralsRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/_authenticated/dashboard/webhooks': typeof AuthenticatedDashboardWebhooksRoute
   '/api/public/feedbacks': typeof ApiPublicFeedbacksRoute
   '/api/public/vote': typeof ApiPublicVoteRoute
   '/api/public/widget.js': typeof ApiPublicWidgetDotjsRoute
@@ -237,6 +247,7 @@ export interface FileRouteTypes {
     | '/dashboard/projects'
     | '/dashboard/referrals'
     | '/dashboard/settings'
+    | '/dashboard/webhooks'
     | '/api/public/feedbacks'
     | '/api/public/vote'
     | '/api/public/widget.js'
@@ -259,6 +270,7 @@ export interface FileRouteTypes {
     | '/dashboard/projects'
     | '/dashboard/referrals'
     | '/dashboard/settings'
+    | '/dashboard/webhooks'
     | '/api/public/feedbacks'
     | '/api/public/vote'
     | '/api/public/widget.js'
@@ -283,6 +295,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/projects'
     | '/_authenticated/dashboard/referrals'
     | '/_authenticated/dashboard/settings'
+    | '/_authenticated/dashboard/webhooks'
     | '/api/public/feedbacks'
     | '/api/public/vote'
     | '/api/public/widget.js'
@@ -422,6 +435,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicFeedbacksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard/webhooks': {
+      id: '/_authenticated/dashboard/webhooks'
+      path: '/webhooks'
+      fullPath: '/dashboard/webhooks'
+      preLoaderRoute: typeof AuthenticatedDashboardWebhooksRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/settings': {
       id: '/_authenticated/dashboard/settings'
       path: '/settings'
@@ -474,6 +494,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardProjectsRoute: typeof AuthenticatedDashboardProjectsRoute
   AuthenticatedDashboardReferralsRoute: typeof AuthenticatedDashboardReferralsRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+  AuthenticatedDashboardWebhooksRoute: typeof AuthenticatedDashboardWebhooksRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
@@ -486,6 +507,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardProjectsRoute: AuthenticatedDashboardProjectsRoute,
     AuthenticatedDashboardReferralsRoute: AuthenticatedDashboardReferralsRoute,
     AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
+    AuthenticatedDashboardWebhooksRoute: AuthenticatedDashboardWebhooksRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   }
 

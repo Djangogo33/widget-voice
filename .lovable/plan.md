@@ -1,71 +1,88 @@
-# Plan — Widget public + pages publiques + onboarding
+Ajout d'un système de webhooks sortants par projet, avec sélection fine des événements, signature HMAC, et rendu Discord natif.
 
-Deux gros blocs pour rendre WidgetVoice utilisable de bout en bout : le widget JS que les clients collent sur leur site, et les pages publiques (changelog + feature requests avec votes), plus un onboarding minimal.
+## 1. Base de données (une migration)
 
-## 1. Widget JS embarquable public
+Table `webhooks` (par projet) :
+- `project_id` → projects.id
+- `name` (label lisible, ex. "Discord #feedbacks")
+- `url` (https, max 2000)
+- `events` (text[] parmi `feedback.created`, `feature_request.created`, `feature_vote.created`, `changelog.published`)
+- `secret` (généré côté serveur, sert au HMAC)
+- `active` (bool, default true)
+- `last_success_at`, `last_error_at`, `last_error_message`, `failure_count`
+- RLS : accès uniquement au propriétaire du projet (via `projects.user_id = auth.uid()`), plus `service_role` pour l'exécution serveur.
+- GRANTs standards `authenticated` + `service_role`.
 
-**But** : `<script src="…/widget.js" data-key="…" async>` affiche un bouton flottant, ouvre un formulaire, capture une screenshot, envoie le feedback.
+Table `webhook_deliveries` (historique, dernières livraisons) :
+- `webhook_id`, `event`, `status_code`, `ok` (bool), `error`, `duration_ms`, `payload` (jsonb)
+- Politique lecture réservée au propriétaire du projet parent.
 
-- Route serveur `src/routes/api/public/widget[.]js.ts` → renvoie un JS auto-exécutant (Content-Type `application/javascript`, CORS `*`).
-- Le script :
-  - lit `data-key` sur son propre `<script>`
-  - injecte un bouton flottant + panneau (Shadow DOM pour isoler les styles)
-  - champs : message (obligatoire), email (optionnel), case "joindre une capture"
-  - screenshot via `html2canvas` chargé dynamiquement en CDN quand l'utilisateur coche la case (garde le widget léger)
-  - POST vers `/api/public/feedbacks`
-- Route serveur `src/routes/api/public/feedbacks.ts` (POST + OPTIONS CORS) :
-  - valide `{ widget_key, message, email?, page_url, user_agent, screenshot_base64? }` avec Zod
-  - resout `project_id` via `widget_key` en utilisant `supabaseAdmin` (import dynamique dans le handler)
-  - si screenshot : upload dans bucket Storage `feedback-screenshots` (à créer, public read), stocke l'URL
-  - insert dans `feedbacks` (status `open`, `browser` = UA parsé simplement)
-  - jamais de PII renvoyée, réponse `{ ok: true }`
-- Migration : créer bucket storage `feedback-screenshots` public en lecture ; s'assurer que la colonne `screenshot_url` existe sur `feedbacks` (sinon l'ajouter).
-- Bouton "Copy snippet" existant dans `dashboard.projects.tsx` pointe déjà vers `/widget.js` — remplacer par `/api/public/widget.js?k=KEY` ou lecture via `data-key` (on garde `data-key`).
+## 2. Déclencheurs de webhooks
 
-## 2. Pages publiques changelog + feature requests
+Aucun trigger Postgres HTTP (indisponible). À la place, on appelle une helper serveur `dispatchWebhooks(projectId, event, payload)` **depuis les points d'entrée déjà serveur** qui créent la donnée :
 
-URLs partageables par les clients de leurs utilisateurs finaux.
+- `src/routes/api/public/feedbacks.ts` → après insert feedback → event `feedback.created`
+- `src/routes/api/public/vote.ts` → après vote → event `feature_vote.created`
+- Dashboard : création de feature request (via un nouveau serverFn `createFeatureRequest`) → `feature_request.created`
+- Dashboard : publication changelog (nouveau serverFn `publishChangelogEntry`) → `changelog.published`
 
-- `src/routes/p.$slug.changelog.tsx` → liste des entrées publiées d'un projet, triées par date.
-- `src/routes/p.$slug.roadmap.tsx` → liste des feature requests avec compteur de votes + bouton "Voter".
-- `slug` = nouvelle colonne sur `projects` (unique, généré depuis le nom à la création ; migration + backfill).
-- Vote anonyme identifié par un cookie `wv_voter` (UUID généré côté client, stocké 1 an). Une table `feature_votes(feature_request_id, voter_id, created_at)` avec unique `(feature_request_id, voter_id)`.
-- Server route publique `POST /api/public/vote` : Zod + insert idempotent + renvoie le nouveau count.
-- Lecture publique via client Supabase publishable (anon) + policies `TO anon SELECT` sur `changelog_entries` (published only), `feature_requests` (status public), `feature_votes` (count seulement — utiliser une vue ou une RPC `get_public_features(slug)`).
-- `head()` par route avec title/description dynamiques basés sur le nom du projet, i18n FR/EN via `useI18n`.
+Les deux dashboards utilisent aujourd'hui `supabase.from(...)` directement côté client — on ajoute des serverFn dédiés pour ces deux actions afin de pouvoir déclencher les webhooks (les updates non liés au trigger restent côté client).
 
-## 3. Onboarding minimal
+## 3. Helper d'envoi (`src/lib/webhooks.server.ts`)
 
-- Après login, si `projects` est vide → redirection auto vers `/dashboard/projects?new=1` qui ouvre la modale existante.
-- Après création du 1er projet : afficher un panneau "Installation" (snippet + lien vers page publique changelog) au lieu de juste fermer la modale.
-- Rien de plus (pas de wizard multi-étapes, on reste MVP).
+- Charge les webhooks actifs du projet dont `events` contient l'event.
+- Construit un payload JSON `{ id, event, project: { id, name, slug }, data, created_at }`.
+- Si l'URL matche `discord.com/api/webhooks` → transforme en `{ username, embeds: [...] }` (couleur par event, titre, description tronquée, champs utiles, lien vers dashboard).
+- Autres URLs → JSON brut + headers :
+  - `X-WidgetVoice-Event`
+  - `X-WidgetVoice-Delivery` (UUID)
+  - `X-WidgetVoice-Signature: sha256=<hex>` calculé sur le body avec `secret`.
+- `fetch` avec `AbortController` (timeout 5 s), 1 retry si 5xx.
+- Écrit `webhook_deliveries` (statut, durée, erreur éventuelle) + met à jour `last_success_at` / `failure_count` sur le webhook.
+- Fire-and-forget côté appelant (`void dispatchWebhooks(...)`) pour ne pas bloquer la réponse au widget.
 
-## Détails techniques
+## 4. UI dashboard
 
-**Nouvelles routes fichiers**
-```
-src/routes/api/public/widget[.]js.ts
-src/routes/api/public/feedbacks.ts
-src/routes/api/public/vote.ts
-src/routes/p.$slug.changelog.tsx
-src/routes/p.$slug.roadmap.tsx
-```
+Nouvelle route `src/routes/_authenticated/dashboard.webhooks.tsx` (item ajouté dans `DashboardShell`) :
+- Liste des webhooks du projet courant (name, URL masquée, events, statut dernière livraison).
+- Formulaire modal ajout/édition : name, URL, cases à cocher pour chaque événement (avec descriptions), toggle actif.
+- Bouton "Test" → serverFn `sendTestWebhook(webhookId)` qui envoie un payload factice `webhook.test` et affiche le résultat (status HTTP).
+- Bouton "Voir le secret" (révélation temporaire) + "Régénérer le secret".
+- Sous-tableau "Dernières livraisons" (10 dernières, event, status, date, erreur si échec).
 
-**Migration Supabase** (un seul fichier)
-- `projects` : ajouter `slug text unique not null` + trigger de génération depuis `name` à l'insert si null.
-- `feedbacks` : s'assurer que `screenshot_url text` et `browser text` existent.
-- `feature_votes` : nouvelle table + GRANT anon SELECT / INSERT + RLS.
-- Storage bucket `feedback-screenshots` (public read via policy).
-- Policies `TO anon SELECT` sur `changelog_entries` (WHERE published) et `feature_requests`.
-- RPC `get_public_project(slug)` (SECURITY DEFINER) qui renvoie project + entries + features + counts en un appel — évite d'exposer les tables directement.
+ServerFns créés (`src/lib/webhooks.functions.ts`) avec `requireSupabaseAuth` :
+- `listWebhooks({ projectId })`
+- `createWebhook({ projectId, name, url, events })`
+- `updateWebhook({ id, patch })`
+- `deleteWebhook({ id })`
+- `rotateWebhookSecret({ id })`
+- `sendTestWebhook({ id })`
+- `listRecentDeliveries({ webhookId })`
 
-**Sécurité**
-- Aucune donnée sensible dans `/api/public/*`. Le widget_key est un identifiant public (pas un secret).
-- Rate limiting simple par IP sur `POST /api/public/feedbacks` (compteur en mémoire — best effort MVP ; à améliorer plus tard).
-- `supabaseAdmin` importé **uniquement à l'intérieur des handlers**, jamais au top-level.
+Chaque fn vérifie que le projet appartient bien au user avant d'agir.
 
-**Hors scope (à faire plus tard)**
-- Paiement/plans Stripe
-- Emails transactionnels
-- Modération/spam avancé
-- Widget très personnalisable (couleurs, position)
+## 5. i18n
+
+Ajouts FR/EN dans `src/lib/i18n.tsx` pour les libellés de la page Webhooks (titres, events, aide Discord, messages d'erreur).
+
+## Fichiers touchés / créés
+
+Créés :
+- `supabase/migrations/<ts>_webhooks.sql`
+- `src/lib/webhooks.server.ts`
+- `src/lib/webhooks.functions.ts`
+- `src/routes/_authenticated/dashboard.webhooks.tsx`
+
+Édités :
+- `src/routes/api/public/feedbacks.ts` (dispatch après insert)
+- `src/routes/api/public/vote.ts` (dispatch après vote)
+- `src/routes/_authenticated/dashboard.feature-requests.tsx` (passer la création via serverFn)
+- `src/routes/_authenticated/dashboard.changelog.tsx` (passer la publication via serverFn)
+- `src/components/dashboard/DashboardShell.tsx` (item de nav "Webhooks")
+- `src/lib/i18n.tsx`
+
+## Hors scope
+
+- Retries exponentiels persistants (queue) — on garde 1 retry best-effort.
+- Signature Slack native (le format JSON générique passe déjà par Zapier/Make si besoin).
+- Rate limiting par webhook.

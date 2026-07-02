@@ -2,8 +2,9 @@ import { Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-route
 import { useEffect, useState, createContext, useContext, useCallback } from "react";
 import {
   MessageSquare, LayoutGrid, Inbox, Megaphone, Lightbulb, Users, Settings,
-  LogOut, ChevronDown, Plus, Check,
+  LogOut, ChevronDown, Plus, Check, Webhook,
 } from "lucide-react";
+
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -31,8 +32,10 @@ const NAV = [
   { to: "/dashboard/changelog", label: "Changelog", icon: Megaphone },
   { to: "/dashboard/feature-requests", label: "Feature Requests", icon: Lightbulb },
   { to: "/dashboard/referrals", label: "Referrals", icon: Users },
+  { to: "/dashboard/webhooks", label: "Webhooks", icon: Webhook },
   { to: "/dashboard/settings", label: "Settings", icon: Settings },
 ] as const;
+
 
 export function DashboardShell() {
   const navigate = useNavigate();

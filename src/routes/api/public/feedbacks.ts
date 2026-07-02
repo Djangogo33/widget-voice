@@ -70,21 +70,30 @@ export const Route = createFileRoute("/api/public/feedbacks")({
         }
 
         const msg = d.email ? `${d.message}\n\n— ${d.email}` : d.message;
-        const { error: insErr } = await supabaseAdmin.from("feedbacks").insert({
+        const { data: inserted, error: insErr } = await supabaseAdmin.from("feedbacks").insert({
           project_id: proj.id,
           message: msg,
           page_url: d.page_url ?? null,
           browser: parseBrowser(d.user_agent),
           screenshot_url: screenshotUrl,
-        });
+        }).select("id").single();
         if (insErr) {
           return new Response(JSON.stringify({ error: "insert_failed" }), {
             status: 500, headers: { ...CORS, "content-type": "application/json" },
           });
         }
+        const { dispatchWebhooks } = await import("@/lib/webhooks.server");
+        void dispatchWebhooks(proj.id, "feedback.created", {
+          id: inserted.id,
+          message: msg,
+          page_url: d.page_url ?? null,
+          browser: parseBrowser(d.user_agent),
+          screenshot_url: screenshotUrl,
+        });
         return new Response(JSON.stringify({ ok: true }), {
           headers: { ...CORS, "content-type": "application/json" },
         });
+
       },
     },
   },
