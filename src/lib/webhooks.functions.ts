@@ -77,12 +77,13 @@ export const updateWebhook = createServerFn({ method: "POST" })
   }).parse(d))
   .handler(async ({ data, context }) => {
     await assertWebhookOwner(context.supabase, data.id, context.userId);
-    const patch: Record<string, unknown> = {};
+    const patch: { name?: string; url?: string; events?: string[]; active?: boolean } = {};
     if (data.name !== undefined) patch.name = data.name;
     if (data.url !== undefined) patch.url = data.url;
-    if (data.events !== undefined) patch.events = data.events;
+    if (data.events !== undefined) patch.events = data.events as string[];
     if (data.active !== undefined) patch.active = data.active;
     const { error } = await context.supabase.from("webhooks").update(patch).eq("id", data.id);
+
     if (error) throw new Error(error.message);
     return { ok: true };
   });
