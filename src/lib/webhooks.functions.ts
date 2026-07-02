@@ -149,7 +149,7 @@ export const createFeatureRequestFn = createServerFn({ method: "POST" })
       .insert({
         project_id: data.projectId,
         title: data.title,
-        description: data.description || null,
+        description: data.description || undefined,
       })
       .select("id, title, description, status")
       .single();
@@ -176,8 +176,9 @@ export const publishChangelogEntryFn = createServerFn({ method: "POST" })
       .insert({
         project_id: data.projectId,
         title: data.title,
-        body: data.body || null,
-        tag: data.tag || null,
+        body: data.body || undefined,
+        tag: data.tag || undefined,
+
         published: true,
       })
       .select("id, title, body, tag, published_at")
