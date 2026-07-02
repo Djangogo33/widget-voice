@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useDashboard } from "@/components/dashboard/DashboardShell";
+import { createFeatureRequestFn } from "@/lib/webhooks.functions";
 import type { Tables } from "@/integrations/supabase/types";
+
 
 type Feature = Tables<"feature_requests"> & { votes?: number };
 
@@ -15,9 +18,11 @@ export const Route = createFileRoute("/_authenticated/dashboard/feature-requests
 
 function FeatureRequestsPage() {
   const { current } = useDashboard();
+  const createFn = useServerFn(createFeatureRequestFn);
   const [items, setItems] = useState<Feature[]>([]);
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+
 
   async function load() {
     if (!current) return setItems([]);
@@ -39,11 +44,10 @@ function FeatureRequestsPage() {
 
   async function create() {
     if (!current || !title.trim()) return;
-    await supabase.from("feature_requests").insert({
-      project_id: current.id, title: title.trim(), description: desc,
-    });
+    await createFn({ data: { projectId: current.id, title: title.trim(), description: desc } });
     setTitle(""); setDesc(""); load();
   }
+
   async function setStatus(id: string, status: string) {
     await supabase.from("feature_requests").update({ status }).eq("id", id);
     load();

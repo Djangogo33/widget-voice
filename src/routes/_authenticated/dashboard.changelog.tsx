@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { Plus, Trash2, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useDashboard } from "@/components/dashboard/DashboardShell";
+import { publishChangelogEntryFn } from "@/lib/webhooks.functions";
 import type { Tables } from "@/integrations/supabase/types";
+
 
 type Entry = Tables<"changelog_entries">;
 
@@ -13,11 +16,13 @@ export const Route = createFileRoute("/_authenticated/dashboard/changelog")({
 
 function ChangelogPage() {
   const { current } = useDashboard();
+  const publishFn = useServerFn(publishChangelogEntryFn);
   const [entries, setEntries] = useState<Entry[]>([]);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [tag, setTag] = useState("");
   const [busy, setBusy] = useState(false);
+
 
   async function load() {
     if (!current) return setEntries([]);
@@ -31,11 +36,12 @@ function ChangelogPage() {
   async function create() {
     if (!current || !title.trim()) return;
     setBusy(true);
-    await supabase.from("changelog_entries").insert({
-      project_id: current.id, title: title.trim(), body, tag: tag.trim() || null,
-    });
-    setBusy(false); setTitle(""); setBody(""); setTag(""); load();
+    try {
+      await publishFn({ data: { projectId: current.id, title: title.trim(), body, tag: tag.trim() || null } });
+    } finally { setBusy(false); }
+    setTitle(""); setBody(""); setTag(""); load();
   }
+
   async function toggle(e: Entry) {
     await supabase.from("changelog_entries").update({ published: !e.published }).eq("id", e.id);
     load();
