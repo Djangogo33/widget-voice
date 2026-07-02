@@ -318,6 +318,106 @@ export type Database = {
           },
         ]
       }
+      webhook_deliveries: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          error: string | null
+          event: string
+          id: string
+          ok: boolean
+          payload: Json | null
+          status_code: number | null
+          webhook_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          event: string
+          id?: string
+          ok: boolean
+          payload?: Json | null
+          status_code?: number | null
+          webhook_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          error?: string | null
+          event?: string
+          id?: string
+          ok?: boolean
+          payload?: Json | null
+          status_code?: number | null
+          webhook_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_deliveries_webhook_id_fkey"
+            columns: ["webhook_id"]
+            isOneToOne: false
+            referencedRelation: "webhooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      webhooks: {
+        Row: {
+          active: boolean
+          created_at: string
+          events: string[]
+          failure_count: number
+          id: string
+          last_error_at: string | null
+          last_error_message: string | null
+          last_success_at: string | null
+          name: string
+          project_id: string
+          secret: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          events?: string[]
+          failure_count?: number
+          id?: string
+          last_error_at?: string | null
+          last_error_message?: string | null
+          last_success_at?: string | null
+          name: string
+          project_id: string
+          secret: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          events?: string[]
+          failure_count?: number
+          id?: string
+          last_error_at?: string | null
+          last_error_message?: string | null
+          last_success_at?: string | null
+          name?: string
+          project_id?: string
+          secret?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhooks_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
