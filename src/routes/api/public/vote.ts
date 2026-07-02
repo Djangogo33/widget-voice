@@ -37,9 +37,23 @@ export const Route = createFileRoute("/api/public/vote")({
             status: 500, headers: { ...CORS, "content-type": "application/json" },
           });
         }
+        // Fire webhook (fire-and-forget); resolve project via feature
+        try {
+          const { data: feat } = await supabaseAdmin
+            .from("feature_requests")
+            .select("id, title, project_id")
+            .eq("id", parsed.data.feature_id).maybeSingle();
+          if (feat) {
+            const { dispatchWebhooks } = await import("@/lib/webhooks.server");
+            void dispatchWebhooks(feat.project_id, "feature_vote.created", {
+              feature_id: feat.id, title: feat.title, votes: data ?? 0,
+            });
+          }
+        } catch { /* ignore */ }
         return new Response(JSON.stringify({ votes: data ?? 0 }), {
           headers: { ...CORS, "content-type": "application/json" },
         });
+
       },
     },
   },
