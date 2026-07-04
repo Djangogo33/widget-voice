@@ -2,7 +2,7 @@ import { Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-route
 import { useEffect, useState, createContext, useContext, useCallback } from "react";
 import {
   MessageSquare, LayoutGrid, Inbox, Megaphone, Lightbulb, Users, Settings,
-  LogOut, ChevronDown, Plus, Check, Webhook,
+  LogOut, ChevronDown, Plus, Check, Webhook, Home,
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -27,6 +27,7 @@ export const useDashboard = () => {
 };
 
 const NAV = [
+  { to: "/dashboard", label: "Vue d'ensemble", icon: Home, exact: true },
   { to: "/dashboard/projects", label: "Projects", icon: LayoutGrid },
   { to: "/dashboard/feedbacks", label: "Feedbacks", icon: Inbox },
   { to: "/dashboard/changelog", label: "Changelog", icon: Megaphone },
@@ -92,7 +93,7 @@ export function DashboardShell() {
       <div className="flex min-h-screen bg-muted/30">
         {/* Sidebar */}
         <aside className="hidden w-60 shrink-0 flex-col border-r border-border bg-card md:flex">
-          <Link to="/dashboard/projects" className="flex h-16 items-center gap-2 border-b border-border px-5">
+          <Link to="/dashboard" className="flex h-16 items-center gap-2 border-b border-border px-5">
             <div className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
               <MessageSquare className="h-4 w-4" strokeWidth={2.5} />
             </div>
@@ -100,7 +101,10 @@ export function DashboardShell() {
           </Link>
           <nav className="flex-1 space-y-0.5 px-3 py-4">
             {NAV.map((item) => {
-              const active = pathname.startsWith(item.to);
+              const active =
+                "exact" in item && item.exact
+                  ? pathname === item.to || pathname === item.to + "/"
+                  : pathname.startsWith(item.to);
               const Icon = item.icon;
               return (
                 <Link
