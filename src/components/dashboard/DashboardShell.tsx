@@ -2,7 +2,7 @@ import { Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-route
 import { useEffect, useState, createContext, useContext, useCallback } from "react";
 import {
   MessageSquare, LayoutGrid, Inbox, Megaphone, Lightbulb, Users, Settings,
-  LogOut, ChevronDown, Plus, Check, Webhook,
+  LogOut, ChevronDown, Plus, Check, Webhook, Home,
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -27,6 +27,7 @@ export const useDashboard = () => {
 };
 
 const NAV = [
+  { to: "/dashboard", label: "Vue d'ensemble", icon: Home, exact: true },
   { to: "/dashboard/projects", label: "Projects", icon: LayoutGrid },
   { to: "/dashboard/feedbacks", label: "Feedbacks", icon: Inbox },
   { to: "/dashboard/changelog", label: "Changelog", icon: Megaphone },
