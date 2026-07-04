@@ -87,8 +87,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "WidgetVoice — The feedback widget your users will actually use" },
       { name: "twitter:description", content: "Embed a beautiful feedback widget in minutes. Collect ideas, vote on features, and ship a public changelog your users love." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6a5c4e36-4e09-4027-b5d1-f2248fa85063/id-preview-8d4d4b88--f55d8edb-577c-4d79-a7bc-6f5b83312a76.lovable.app-1781130422536.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6a5c4e36-4e09-4027-b5d1-f2248fa85063/id-preview-8d4d4b88--f55d8edb-577c-4d79-a7bc-6f5b83312a76.lovable.app-1781130422536.png" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/6e02ff50-d22c-4697-8f84-4fde261b13f5" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/6e02ff50-d22c-4697-8f84-4fde261b13f5" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
