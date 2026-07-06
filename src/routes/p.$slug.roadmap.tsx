@@ -14,13 +14,23 @@ type PublicData = {
 const STATUS_ORDER = ["open", "planned", "in_progress", "done", "declined"] as const;
 
 export const Route = createFileRoute("/p/$slug/roadmap")({
-  head: () => ({
-    meta: [
-      { title: "Roadmap" },
-      { name: "description", content: "What we're building next — vote on ideas." },
-      { property: "og:title", content: "Roadmap" },
-    ],
-  }),
+  head: ({ params }) => {
+    const url = `https://widget-voice.lovable.app/p/${params.slug}/roadmap`;
+    const title = `Roadmap — ${params.slug}`;
+    const desc = "What we're building next — vote on the ideas that matter to you.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: desc },
+        { property: "og:title", content: title },
+        { property: "og:description", content: desc },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: url },
+        { name: "twitter:card", content: "summary" },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   component: PublicRoadmap,
 });
 
