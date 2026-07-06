@@ -37,6 +37,7 @@ function FeatureRequestsPage() {
         counts[v.feature_request_id] = (counts[v.feature_request_id] ?? 0) + 1;
       });
       list.forEach((f) => (f.votes = counts[f.id] ?? 0));
+      list.sort((a, b) => (b.votes ?? 0) - (a.votes ?? 0));
     }
     setItems(list);
   }
