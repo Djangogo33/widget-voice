@@ -1,12 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { X, ImageIcon, Check, Inbox } from "lucide-react";
+import { X, ImageIcon, Check, Inbox, Search } from "lucide-react";
 import { useDashboard } from "@/components/dashboard/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Feedback = Tables<"feedbacks">;
 type Filter = "all" | "open" | "resolved";
+type TypeFilter = "all" | "idea" | "bug" | "question";
+
+function detectType(msg: string): "idea" | "bug" | "question" | "other" {
+  const m = msg.match(/^\[(idea|bug|question)\]/i);
+  return m ? (m[1].toLowerCase() as "idea" | "bug" | "question") : "other";
+}
 
 export const Route = createFileRoute("/_authenticated/dashboard/feedbacks")({
   component: FeedbacksPage,
@@ -16,6 +22,8 @@ function FeedbacksPage() {
   const { current } = useDashboard();
   const [rows, setRows] = useState<Feedback[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
+  const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Feedback | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -33,10 +41,15 @@ function FeedbacksPage() {
 
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [current?.id]);
 
-  const filtered = useMemo(
-    () => filter === "all" ? rows : rows.filter((r) => r.status === filter),
-    [rows, filter],
-  );
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return rows.filter((r) => {
+      if (filter !== "all" && r.status !== filter) return false;
+      if (typeFilter !== "all" && detectType(r.message) !== typeFilter) return false;
+      if (q && !(r.message.toLowerCase().includes(q) || (r.page_url ?? "").toLowerCase().includes(q))) return false;
+      return true;
+    });
+  }, [rows, filter, typeFilter, query]);
 
   async function resolve(id: string) {
     await supabase.from("feedbacks").update({ status: "resolved" }).eq("id", id);
@@ -53,18 +66,42 @@ function FeedbacksPage() {
             {current ? `From ${current.name}` : "Select a project"}
           </p>
         </div>
-        <div className="inline-flex rounded-lg border border-border bg-card p-0.5">
-          {(["all","open","resolved"] as Filter[]).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize transition ${
-                filter === f ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search…"
+              className="w-48 rounded-lg border border-border bg-background pl-8 pr-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+            />
+          </div>
+          <div className="inline-flex rounded-lg border border-border bg-card p-0.5">
+            {(["all","idea","bug","question"] as TypeFilter[]).map((f) => (
+              <button
+                key={f}
+                onClick={() => setTypeFilter(f)}
+                className={`rounded-md px-2.5 py-1.5 text-xs font-medium capitalize transition ${
+                  typeFilter === f ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+          <div className="inline-flex rounded-lg border border-border bg-card p-0.5">
+            {(["all","open","resolved"] as Filter[]).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize transition ${
+                  filter === f ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

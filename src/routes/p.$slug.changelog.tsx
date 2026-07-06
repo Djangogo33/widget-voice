@@ -11,13 +11,34 @@ type PublicData = {
 };
 
 export const Route = createFileRoute("/p/$slug/changelog")({
-  head: () => ({
-    meta: [
-      { title: "Changelog" },
-      { name: "description", content: "Product updates and release notes." },
-      { property: "og:title", content: "Changelog" },
-    ],
-  }),
+  head: ({ params }) => {
+    const url = `https://widget-voice.lovable.app/p/${params.slug}/changelog`;
+    const title = `Changelog — ${params.slug}`;
+    const desc = "Product updates and release notes.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: desc },
+        { property: "og:title", content: title },
+        { property: "og:description", content: desc },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: url },
+        { name: "twitter:card", content: "summary" },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [{
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: params.slug, item: `https://widget-voice.lovable.app/p/${params.slug}/roadmap` },
+            { "@type": "ListItem", position: 2, name: "Changelog", item: url },
+          ],
+        }),
+      }],
+    };
+  },
   component: PublicChangelog,
 });
 
