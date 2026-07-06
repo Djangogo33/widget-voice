@@ -1,12 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { X, ImageIcon, Check, Inbox } from "lucide-react";
+import { X, ImageIcon, Check, Inbox, Search } from "lucide-react";
 import { useDashboard } from "@/components/dashboard/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Feedback = Tables<"feedbacks">;
 type Filter = "all" | "open" | "resolved";
+type TypeFilter = "all" | "idea" | "bug" | "question";
+
+function detectType(msg: string): "idea" | "bug" | "question" | "other" {
+  const m = msg.match(/^\[(idea|bug|question)\]/i);
+  return m ? (m[1].toLowerCase() as "idea" | "bug" | "question") : "other";
+}
 
 export const Route = createFileRoute("/_authenticated/dashboard/feedbacks")({
   component: FeedbacksPage,
@@ -16,6 +22,8 @@ function FeedbacksPage() {
   const { current } = useDashboard();
   const [rows, setRows] = useState<Feedback[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
+  const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Feedback | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -33,10 +41,15 @@ function FeedbacksPage() {
 
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [current?.id]);
 
-  const filtered = useMemo(
-    () => filter === "all" ? rows : rows.filter((r) => r.status === filter),
-    [rows, filter],
-  );
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return rows.filter((r) => {
+      if (filter !== "all" && r.status !== filter) return false;
+      if (typeFilter !== "all" && detectType(r.message) !== typeFilter) return false;
+      if (q && !(r.message.toLowerCase().includes(q) || (r.page_url ?? "").toLowerCase().includes(q))) return false;
+      return true;
+    });
+  }, [rows, filter, typeFilter, query]);
 
   async function resolve(id: string) {
     await supabase.from("feedbacks").update({ status: "resolved" }).eq("id", id);

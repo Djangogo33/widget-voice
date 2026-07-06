@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -33,9 +35,19 @@ import { Route as AuthenticatedDashboardFeedbacksRouteImport } from './routes/_a
 import { Route as AuthenticatedDashboardFeatureRequestsRouteImport } from './routes/_authenticated/dashboard.feature-requests'
 import { Route as AuthenticatedDashboardChangelogRouteImport } from './routes/_authenticated/dashboard.changelog'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -159,7 +171,9 @@ const AuthenticatedDashboardChangelogRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/legal/cgu': typeof LegalCguRoute
   '/legal/cookies': typeof LegalCookiesRoute
@@ -183,7 +197,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/legal/cgu': typeof LegalCguRoute
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/mentions-legales': typeof LegalMentionsLegalesRoute
@@ -208,7 +224,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/legal/cgu': typeof LegalCguRoute
   '/legal/cookies': typeof LegalCookiesRoute
@@ -234,7 +252,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/robots.txt'
     | '/signup'
+    | '/sitemap.xml'
     | '/dashboard'
     | '/legal/cgu'
     | '/legal/cookies'
@@ -258,7 +278,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/robots.txt'
     | '/signup'
+    | '/sitemap.xml'
     | '/legal/cgu'
     | '/legal/cookies'
     | '/legal/mentions-legales'
@@ -282,7 +304,9 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/login'
+    | '/robots.txt'
     | '/signup'
+    | '/sitemap.xml'
     | '/_authenticated/dashboard'
     | '/legal/cgu'
     | '/legal/cookies'
@@ -308,7 +332,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SignupRoute: typeof SignupRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   LegalCguRoute: typeof LegalCguRoute
   LegalCookiesRoute: typeof LegalCookiesRoute
   LegalMentionsLegalesRoute: typeof LegalMentionsLegalesRoute
@@ -323,11 +349,25 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -531,7 +571,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   LoginRoute: LoginRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SignupRoute: SignupRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   LegalCguRoute: LegalCguRoute,
   LegalCookiesRoute: LegalCookiesRoute,
   LegalMentionsLegalesRoute: LegalMentionsLegalesRoute,
