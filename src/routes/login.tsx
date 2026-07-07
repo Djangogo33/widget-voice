@@ -13,8 +13,12 @@ export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       { title: "Log in — WidgetVoice" },
-      { name: "description", content: "Log in to your WidgetVoice account." },
+      { name: "description", content: "Log in to your WidgetVoice account to manage feedback, roadmap and changelog." },
+      { property: "og:title", content: "Log in — WidgetVoice" },
+      { property: "og:description", content: "Log in to your WidgetVoice account to manage feedback, roadmap and changelog." },
+      { property: "og:url", content: "https://widget-voice.lovable.app/login" },
     ],
+    links: [{ rel: "canonical", href: "https://widget-voice.lovable.app/login" }],
   }),
   component: LoginPage,
 });
