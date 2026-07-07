@@ -79,16 +79,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "WidgetVoice — The feedback widget your users will actually use" },
-      { name: "description", content: "Embed a beautiful feedback widget in minutes. Collect ideas, vote on features, and ship a public changelog your users love." },
-      { property: "og:title", content: "WidgetVoice — The feedback widget your users will actually use" },
-      { property: "og:description", content: "Embed a beautiful feedback widget in minutes. Collect ideas, vote on features, and ship a public changelog your users love." },
+      { title: "WidgetVoice — The feedback widget your users will use" },
+      { name: "description", content: "Embed a beautiful feedback widget in minutes. Collect ideas, vote on features, ship a public changelog." },
+      { property: "og:site_name", content: "WidgetVoice" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "WidgetVoice — The feedback widget your users will actually use" },
-      { name: "twitter:description", content: "Embed a beautiful feedback widget in minutes. Collect ideas, vote on features, and ship a public changelog your users love." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/6e02ff50-d22c-4697-8f84-4fde261b13f5" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/6e02ff50-d22c-4697-8f84-4fde261b13f5" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -96,16 +91,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" },
     ],
-    scripts: [{
-      type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        name: "WidgetVoice",
-        url: "https://widget-voice.lovable.app",
-        description: "Embeddable feedback widget, public roadmap and changelog for product teams.",
-      }),
-    }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "WidgetVoice",
+          url: "https://widget-voice.lovable.app",
+          description: "Embeddable feedback widget, public roadmap and changelog for product teams.",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "WidgetVoice",
+          url: "https://widget-voice.lovable.app",
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
