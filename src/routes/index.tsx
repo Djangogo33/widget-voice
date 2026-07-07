@@ -6,7 +6,43 @@ import {
 } from "lucide-react";
 import { useI18n, LangSwitcher } from "@/lib/i18n";
 
+const FAQ_ITEMS = [
+  { q: "How long does setup take?", a: "Under two minutes. Copy a single snippet, paste it into your app, and the widget is live." },
+  { q: "Can I customize the widget look?", a: "Yes — colors, position, copy, and triggers are fully configurable. Studio plans support a custom domain too." },
+  { q: "Do you offer a free plan?", a: "Yes, the Free plan supports 1 project and shows a small WidgetVoice badge. Solo removes the badge." },
+  { q: "Can I cancel anytime?", a: "Of course. There are no contracts — cancel from your dashboard in one click." },
+  { q: "Is my data secure?", a: "Data is encrypted in transit and at rest. We're GDPR-compliant and hosted in the EU." },
+];
+
+const OG_IMAGE = "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/6e02ff50-d22c-4697-8f84-4fde261b13f5";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "WidgetVoice — The feedback widget your users will use" },
+      { name: "description", content: "Embed a beautiful feedback widget in minutes. Collect ideas, vote on features, ship a public changelog your users love." },
+      { property: "og:title", content: "WidgetVoice — The feedback widget your users will use" },
+      { property: "og:description", content: "Embed a beautiful feedback widget in minutes. Collect ideas, vote on features, ship a public changelog your users love." },
+      { property: "og:url", content: "https://widget-voice.lovable.app/" },
+      { property: "og:image", content: OG_IMAGE },
+      { name: "twitter:image", content: OG_IMAGE },
+      { name: "twitter:title", content: "WidgetVoice — The feedback widget your users will use" },
+      { name: "twitter:description", content: "Embed a beautiful feedback widget in minutes. Collect ideas, vote on features, ship a public changelog your users love." },
+    ],
+    links: [{ rel: "canonical", href: "https://widget-voice.lovable.app/" }],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: FAQ_ITEMS.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }),
+    }],
+  }),
   component: Landing,
 });
 

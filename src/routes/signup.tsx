@@ -12,8 +12,12 @@ export const Route = createFileRoute("/signup")({
   head: () => ({
     meta: [
       { title: "Sign up — WidgetVoice" },
-      { name: "description", content: "Create your free WidgetVoice account." },
+      { name: "description", content: "Create your free WidgetVoice account and start collecting product feedback in minutes." },
+      { property: "og:title", content: "Sign up — WidgetVoice" },
+      { property: "og:description", content: "Create your free WidgetVoice account and start collecting product feedback in minutes." },
+      { property: "og:url", content: "https://widget-voice.lovable.app/signup" },
     ],
+    links: [{ rel: "canonical", href: "https://widget-voice.lovable.app/signup" }],
   }),
   validateSearch: (s: Record<string, unknown>) => ({
     ref: typeof s.ref === "string" ? s.ref : undefined,
