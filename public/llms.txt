@@ -1,0 +1,20 @@
+# WidgetVoice
+
+> Embeddable feedback widget, public roadmap and changelog for product teams. Collect ideas, vote on features, and ship a public changelog in minutes.
+
+WidgetVoice helps product teams gather user feedback directly on their website with a lightweight, customizable widget. Users can submit ideas, report bugs, vote on feature requests, and follow product updates through a public roadmap and changelog.
+
+## Pages
+
+- [Home](/): Product overview, features, pricing, and FAQ.
+- [Sign up](/signup): Create a free WidgetVoice account.
+- [Log in](/login): Access your dashboard.
+- [Website feedback examples](/examples): Guide and inspiration for collecting user feedback on your site.
+
+## Legal
+
+- [Terms of service](/legal/cgu)
+- [Privacy policy](/legal/privacy)
+- [Cookies](/legal/cookies)
+- [Legal notice](/legal/mentions-legales)
+- [Terms of sale](/legal/terms-of-sale)
