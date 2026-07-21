@@ -134,13 +134,14 @@ const WIDGET_SCRIPT = `(function(){
         screenshot = canvas.toDataURL('image/jpeg', 0.7);
         panel.style.display = '';
       }
-      var labelled = '[' + currentType + '] ' + text;
+      var text2 = (msg.value || '').trim();
+      if (text2.length < 3) { send.disabled=false; send.textContent=L.send; status.className='err'; status.textContent = L.need; return; }
       var res = await fetch(API, {
         method:'POST', headers:{'content-type':'application/json'},
         body: JSON.stringify({
-          widget_key: key, message: labelled, email: email.value || null,
+          widget_key: key, message: text2, type: currentType, email: email.value || null,
           page_url: location.href, user_agent: navigator.userAgent,
-          screenshot: screenshot
+          screenshot: screenshot, hp: hp.value || null
         })
       });
       if (!res.ok) throw new Error('http '+res.status);
