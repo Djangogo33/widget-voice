@@ -27,6 +27,17 @@ export const Route = createFileRoute("/api/public/vote")({
             status: 400, headers: { ...CORS, "content-type": "application/json" },
           });
         }
+        const { checkRateLimit, getClientIp } = await import("@/lib/rate-limit.server");
+        const ip = getClientIp(request);
+        const [okVoter, okIp] = await Promise.all([
+          checkRateLimit("vote:voter", parsed.data.voter_id, 20, 60),
+          checkRateLimit("vote:ip", ip, 60, 60),
+        ]);
+        if (!okVoter || !okIp) {
+          return new Response(JSON.stringify({ error: "rate_limited" }), {
+            status: 429, headers: { ...CORS, "content-type": "application/json" },
+          });
+        }
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data, error } = await supabaseAdmin.rpc("cast_public_vote", {
           _feature_id: parsed.data.feature_id,

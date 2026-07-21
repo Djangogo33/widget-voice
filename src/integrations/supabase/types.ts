@@ -135,6 +135,7 @@ export type Database = {
           project_id: string
           screenshot_url: string | null
           status: string
+          type: string
           updated_at: string
         }
         Insert: {
@@ -146,6 +147,7 @@ export type Database = {
           project_id: string
           screenshot_url?: string | null
           status?: string
+          type?: string
           updated_at?: string
         }
         Update: {
@@ -157,6 +159,7 @@ export type Database = {
           project_id?: string
           screenshot_url?: string | null
           status?: string
+          type?: string
           updated_at?: string
         }
         Relationships: [
@@ -273,6 +276,30 @@ export type Database = {
           id?: string
           max_uses?: number | null
           used_count?: number
+        }
+        Relationships: []
+      }
+      rate_limits: {
+        Row: {
+          bucket: string
+          count: number
+          id: string
+          key: string
+          window_start: string
+        }
+        Insert: {
+          bucket: string
+          count?: number
+          id?: string
+          key: string
+          window_start?: string
+        }
+        Update: {
+          bucket?: string
+          count?: number
+          id?: string
+          key?: string
+          window_start?: string
         }
         Relationships: []
       }
@@ -431,8 +458,21 @@ export type Database = {
         Args: { _feature_id: string; _voter: string }
         Returns: number
       }
+      feedback_is_duplicate: {
+        Args: { _message: string; _project_id: string; _window_seconds: number }
+        Returns: boolean
+      }
       generate_referral_code: { Args: never; Returns: string }
       get_public_project: { Args: { _slug: string }; Returns: Json }
+      rate_limit_check: {
+        Args: {
+          _bucket: string
+          _key: string
+          _max: number
+          _window_seconds: number
+        }
+        Returns: boolean
+      }
       slugify: { Args: { _v: string }; Returns: string }
       submit_public_feedback: {
         Args: {
