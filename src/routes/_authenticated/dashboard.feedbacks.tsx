@@ -107,7 +107,7 @@ function FeedbacksPage() {
             />
           </div>
           <div className="inline-flex rounded-lg border border-border bg-card p-0.5">
-            {(["all","idea","bug","question"] as TypeFilter[]).map((f) => (
+            {(["all","idea","bug","question","other"] as TypeFilter[]).map((f) => (
               <button
                 key={f}
                 onClick={() => setTypeFilter(f)}
