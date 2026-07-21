@@ -1,18 +1,36 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { X, ImageIcon, Check, Inbox, Search } from "lucide-react";
+import { X, ImageIcon, Check, Inbox, Search, Download } from "lucide-react";
 import { useDashboard } from "@/components/dashboard/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Feedback = Tables<"feedbacks">;
 type Filter = "all" | "open" | "resolved";
-type TypeFilter = "all" | "idea" | "bug" | "question";
+type TypeFilter = "all" | "idea" | "bug" | "question" | "other";
 
-function detectType(msg: string): "idea" | "bug" | "question" | "other" {
-  const m = msg.match(/^\[(idea|bug|question)\]/i);
-  return m ? (m[1].toLowerCase() as "idea" | "bug" | "question") : "other";
+function typeBadgeClass(t: string) {
+  switch (t) {
+    case "bug": return "bg-red-100 text-red-700";
+    case "idea": return "bg-violet-100 text-violet-700";
+    case "question": return "bg-blue-100 text-blue-700";
+    default: return "bg-gray-100 text-gray-600";
+  }
 }
+
+function toCsv(rows: Feedback[]): string {
+  const header = ["id","type","status","message","page_url","browser","created_at"];
+  const esc = (v: unknown) => {
+    const s = v == null ? "" : String(v);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const lines = [header.join(",")];
+  for (const r of rows) {
+    lines.push([r.id, r.type ?? "other", r.status, r.message, r.page_url ?? "", r.browser ?? "", r.created_at].map(esc).join(","));
+  }
+  return lines.join("\n");
+}
+
 
 export const Route = createFileRoute("/_authenticated/dashboard/feedbacks")({
   component: FeedbacksPage,
@@ -45,11 +63,23 @@ function FeedbacksPage() {
     const q = query.trim().toLowerCase();
     return rows.filter((r) => {
       if (filter !== "all" && r.status !== filter) return false;
-      if (typeFilter !== "all" && detectType(r.message) !== typeFilter) return false;
+      if (typeFilter !== "all" && (r.type ?? "other") !== typeFilter) return false;
       if (q && !(r.message.toLowerCase().includes(q) || (r.page_url ?? "").toLowerCase().includes(q))) return false;
       return true;
     });
   }, [rows, filter, typeFilter, query]);
+
+  function exportCsv() {
+    const csv = toCsv(filtered);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `feedbacks-${current?.slug ?? "export"}-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
 
   async function resolve(id: string) {
     await supabase.from("feedbacks").update({ status: "resolved" }).eq("id", id);
