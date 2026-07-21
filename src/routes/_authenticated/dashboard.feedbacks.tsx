@@ -154,6 +154,7 @@ function FeedbacksPage() {
             <thead className="border-b border-border bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
                 <th className="px-4 py-3 font-medium">Preview</th>
+                <th className="px-4 py-3 font-medium">Type</th>
                 <th className="px-4 py-3 font-medium">Message</th>
                 <th className="px-4 py-3 font-medium">Page</th>
                 <th className="px-4 py-3 font-medium">Browser</th>
@@ -176,6 +177,11 @@ function FeedbacksPage() {
                         <ImageIcon className="h-4 w-4" />
                       </div>
                     )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-flex rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${typeBadgeClass(r.type ?? "other")}`}>
+                      {r.type ?? "other"}
+                    </span>
                   </td>
                   <td className="max-w-[24rem] truncate px-4 py-3">{r.message}</td>
                   <td className="max-w-[14rem] truncate px-4 py-3 text-muted-foreground">{r.page_url ?? "—"}</td>
